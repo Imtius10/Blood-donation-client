@@ -15,6 +15,7 @@ import PrivateRoutes from "../Private/PrivateRoutes";
 import MyDonationRequests from "../Dashboard/MyDonationRequest/MyDonationRequests";
 import Donate from "../Dashboard/Donate/Donate";
 import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
+import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 
 
 
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path: '/payment-success',
                 element:<PaymentSuccess></PaymentSuccess>
+            },
+            {
+                path: '/search-request',
+                element:<SearchRequest></SearchRequest>
             }
         ]
     },

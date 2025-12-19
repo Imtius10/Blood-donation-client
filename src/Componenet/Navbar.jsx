@@ -67,6 +67,8 @@ const Navbar = () => {
                 <NavLink to="/funding" className={navLinkClass}>
                   Funding
                 </NavLink>
+                <NavLink to={'/search-request'} className={navLinkClass}
+                  onClick={() => setMenuOpen(false)} >Search</NavLink>
 
                 {/* Enhanced User Dropdown */}
                 <div className="relative ml-2">
@@ -102,7 +104,8 @@ const Navbar = () => {
                             {user.email}
                           </p>
                         </div>
-
+                        <NavLink to={'/search-request'} className={navLinkClass}
+                          onClick={() => setMenuOpen(false)} >Search</NavLink>
                         <NavLink
                           to="/dashboard"
                           className="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-150"
@@ -166,7 +169,8 @@ const Navbar = () => {
                 >
                   Funding
                 </NavLink>
-
+                <NavLink to={'/search-request'} className={navLinkClass}
+                  onClick={() => setMenuOpen(false)} >Search</NavLink>
                 <NavLink
                   to="/dashboard"
                   className={navLinkClass}
