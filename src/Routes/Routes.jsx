@@ -23,6 +23,7 @@ import Donate from "../Dashboard/Donate/Donate";
 import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import AllUserRequests from "../Dashboard/Admin/AllUserRequests";
+import AdminDonationStats from "../Dashboard/Admin/AdminDonationStats";
 
 const router = createBrowserRouter([
     {
@@ -106,6 +107,14 @@ const router = createBrowserRouter([
                     </AdminRoute>
                 ),
             },
+            {
+                path: 'all-donation',
+                element: (
+                    <AdminRoute>
+                        <AdminDonationStats></AdminDonationStats>
+                    </AdminRoute>
+                )
+            }
 
         ],
     },

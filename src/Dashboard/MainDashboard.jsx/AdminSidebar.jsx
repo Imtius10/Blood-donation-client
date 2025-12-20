@@ -77,6 +77,10 @@ export default function DashboardSidebar() {
                             <BarChart3 size={20} />
                             {!collapsed && "All Users"}
                         </NavLink>
+                        <NavLink to="/dashboard/all-donation" className={linkStyle}>
+                            <BarChart3 size={20} />
+                            {!collapsed && "All Donation Status"}
+                        </NavLink>
                     </>
                 )}
 

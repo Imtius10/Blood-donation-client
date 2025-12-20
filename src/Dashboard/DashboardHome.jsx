@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import AdminDonationStats from "./Admin/AdminDonationStats";
 
 const DashboardHome = () => {
     const { user } = useContext(AuthContext);
@@ -48,9 +49,7 @@ const DashboardHome = () => {
             };
 
             requests.forEach((r) => {
-                if (r.donation_status) {
-                    computed[r.donation_status]++;
-                }
+                if (r.donation_status) computed[r.donation_status]++;
             });
 
             setStats(computed);
@@ -119,63 +118,57 @@ const DashboardHome = () => {
         <div className="min-h-screen bg-gradient-to-br from-red-50 to-white p-6">
             <div className="max-w-7xl mx-auto space-y-8">
 
-                {/* Welcome */}
+                {/* Welcome Banner */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-600 flex gap-4"
+                    className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-600 flex gap-4 items-center"
                 >
-                    <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center">
-                        <FaTint className="text-white text-2xl" />
+                    <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
+                        <FaTint className="text-white text-3xl" />
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">
                             Welcome back, {user?.displayName || "Donor"} 👋
                         </h1>
-                        <p className="text-gray-600">
-                            Here’s a quick overview of your donation activity
+                        <p className="text-gray-600 mt-1">
+                            Quick overview of your donation activity
                         </p>
                     </div>
                 </motion.div>
 
-                {/* Stats */}
+                {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     {Object.keys(stats).map((key) => (
                         <motion.div
                             key={key}
                             whileHover={{ scale: 1.05 }}
-                            className="bg-white rounded-xl shadow p-5 text-center"
+                            className="bg-white rounded-2xl shadow-lg p-5 text-center transition-transform"
                         >
                             {loading ? (
                                 <Skeleton height={30} />
                             ) : (
                                 <>
-                                    <p className="text-2xl font-bold text-red-600">
-                                        {stats[key]}
-                                    </p>
-                                    <p className="text-sm text-gray-500 capitalize">
-                                        {key}
-                                    </p>
+                                    <p className="text-2xl font-bold text-red-600">{stats[key]}</p>
+                                    <p className="text-sm text-gray-500 capitalize">{key}</p>
                                 </>
                             )}
                         </motion.div>
                     ))}
                 </div>
 
-                {/* Recent Requests */}
-                <div className="bg-white rounded-2xl shadow overflow-hidden">
-                    <div className="bg-red-600 px-6 py-4 text-white font-bold">
+                {/* Recent Requests Table */}
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div className="bg-red-600 px-6 py-4 text-white font-bold text-lg">
                         Recent Donation Requests
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gray-50 text-gray-600">
+                            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                                 <tr>
                                     {["Recipient", "Location", "Date", "Blood", "Status", "Actions"].map((h) => (
-                                        <th key={h} className="px-6 py-3 text-left text-xs font-semibold uppercase">
-                                            {h}
-                                        </th>
+                                        <th key={h} className="px-6 py-3 text-left">{h}</th>
                                     ))}
                                 </tr>
                             </thead>
@@ -197,34 +190,28 @@ const DashboardHome = () => {
                                     </tr>
                                 ) : (
                                     recentRequests.map((r) => (
-                                        <tr key={r._id} className="hover:bg-gray-50">
+                                        <tr key={r._id} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4">{r.recipientName}</td>
-                                            <td className="px-6 py-4">
-                                                {r.upazila}, {r.district}
-                                            </td>
+                                            <td className="px-6 py-4">{r.upazila}, {r.district}</td>
                                             <td className="px-6 py-4">{r.donationDate}</td>
-                                            <td className="px-6 py-4 font-bold text-red-600">
-                                                {r.bloodGroup}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {badge(r.donation_status)}
-                                            </td>
+                                            <td className="px-6 py-4 font-bold text-red-600">{r.bloodGroup}</td>
+                                            <td className="px-6 py-4">{badge(r.donation_status)}</td>
                                             <td className="px-6 py-4 flex gap-2">
                                                 <button
                                                     onClick={() => handleStatusUpdate(r._id, "done")}
-                                                    className="p-2 text-green-600 hover:bg-green-50 rounded"
+                                                    className="p-2 text-green-600 hover:bg-green-50 rounded transition"
                                                 >
                                                     <FaCheckCircle />
                                                 </button>
                                                 <button
                                                     onClick={() => handleStatusUpdate(r._id, "canceled")}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
                                                 >
                                                     <FaTimesCircle />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(r._id)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded"
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
                                                 >
                                                     <FaTrash />
                                                 </button>
@@ -237,6 +224,8 @@ const DashboardHome = () => {
                     </div>
                 </div>
 
+                {/* Admin Donation Stats */}
+                <AdminDonationStats />
             </div>
         </div>
     );
