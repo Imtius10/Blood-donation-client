@@ -12,12 +12,10 @@ const MyDonationRequests = () => {
 
     useEffect(() => {
         axiosSecure
-            .get(
-                `/my-requests?page=${currentPage - 1}&size=${itemsPerPage}&status=${status}`
-            )
+            .get(`/my-requests?page=${currentPage - 1}&size=${itemsPerPage}&status=${status}`)
             .then((res) => {
-                setMyRequests(res.data.request);
-                setTotalRequest(res.data.totalRequest);
+                setMyRequests(res.data.requests || []);
+                setTotalRequest(res.data.totalRequest || 0);
             });
     }, [axiosSecure, currentPage, itemsPerPage, status]);
 

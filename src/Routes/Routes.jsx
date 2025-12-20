@@ -18,6 +18,7 @@ import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import DashboardHome from "../Dashboard/DashboardHome";
 import DashboardProfile from "../Dashboard/DashboardProfile";
+import EditDonationRequest from "../Dashboard/EditDonationRequest";
 
 
 
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
         element: <PrivateRoutes><DashboardLayouts /></PrivateRoutes>,
         children: [
             {
-                index: true, // 👈 this matches "/dashboard"
+                index: true, 
                 element: <DashboardHome />
             },
             {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
             {
                 path: "profile",
                 element: <DashboardProfile />
+            },
+            {
+                path: "edit-request/:id",
+                element: <EditDonationRequest />
             }
 
         ],

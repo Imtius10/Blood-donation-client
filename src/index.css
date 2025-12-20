@@ -10,3 +10,7 @@
   --color-secondary: teal;
   --color-plateShare:#ba692b;
 }
+
+.glow-hover:hover {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.15);
+}

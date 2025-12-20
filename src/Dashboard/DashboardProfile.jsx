@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
-import useAxiosSecure from "../Hooks/UseAxiosSecure";
+
 import { FaEdit, FaSave, FaUserCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useAxios from "../Hooks/UseAxios";
 
 const DashboardProfile = () => {
     const { user, setUser } = useContext(AuthContext);
-    const axiosSecure = useAxiosSecure();
+    const axiosInstance = useAxios()
 
     const [profile, setProfile] = useState({});
     const [editable, setEditable] = useState(false);
@@ -18,7 +19,7 @@ const DashboardProfile = () => {
 
     const fetchProfile = async () => {
         try {
-            const res = await axiosSecure.get(`/users/profile?email=${user?.email}`);
+            const res = await axiosInstance.get(`/users/profile?email=${user?.email}`);
             setProfile(res.data);
         } catch (err) {
             console.error(err);
@@ -34,23 +35,37 @@ const DashboardProfile = () => {
 
     const handleSave = async () => {
         try {
-            const { _id, email, ...updateData } = profile;
+            const email = user?.email; // ✅ source of truth
+            const { role, email: _, ...updateData } = profile;
 
-            await axiosSecure.patch(`/users/update/${_id}`, updateData);
+            if (!email) {
+                Swal.fire("Error", "User email missing. Please re-login.", "error");
+                return;
+            }
 
-            Swal.fire({
-                icon: "success",
-                title: "Profile Updated",
-                timer: 2000,
-                showConfirmButton: false
-            });
+            const res = await axiosInstance.patch(
+                "/users/update-by-email",
+                { email, updateData }
+            );
 
-            setEditable(false);
-            setUser({ ...user, ...updateData });
+            if (res.data.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Profile Updated",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                setEditable(false);
+                setUser({ ...user, ...updateData });
+            }
         } catch (error) {
+            console.error("Update Error:", error);
             Swal.fire("Error", "Failed to update profile", "error");
         }
     };
+
+
 
     if (loading) {
         return (
