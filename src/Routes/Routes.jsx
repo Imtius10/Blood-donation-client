@@ -16,6 +16,7 @@ import MyDonationRequests from "../Dashboard/MyDonationRequest/MyDonationRequest
 import Donate from "../Dashboard/Donate/Donate";
 import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
+import DashboardHome from "../Dashboard/DashboardHome";
 
 
 
@@ -28,27 +29,27 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element:<Home></Home>
+                element: <Home></Home>
             },
             {
                 path: '/login',
-                element:<Login></Login>
+                element: <Login></Login>
             },
             {
                 path: '/register',
-                element:<Register></Register>
+                element: <Register></Register>
             },
             {
                 path: '/donate',
-                element:<Donate></Donate>
+                element: <Donate></Donate>
             },
             {
                 path: '/payment-success',
-                element:<PaymentSuccess></PaymentSuccess>
+                element: <PaymentSuccess></PaymentSuccess>
             },
             {
                 path: '/search-request',
-                element:<SearchRequest></SearchRequest>
+                element: <SearchRequest></SearchRequest>
             }
         ]
     },
@@ -56,25 +57,29 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <PrivateRoutes><DashboardLayouts /></PrivateRoutes>,
         children: [
-           // { path: "test", element: <Test /> },
+            {
+                index: true, // 👈 this matches "/dashboard"
+                element: <DashboardHome />
+            },
             {
                 path: 'add-request',
-                element:<CreateDonationRequest></CreateDonationRequest>
+                element: <CreateDonationRequest />
             },
             {
                 path: 'manageproduct',
-                element:<ManageDashboard></ManageDashboard>
+                element: <ManageDashboard />
             },
             {
                 path: 'all-user',
-                element:<AllUsers></AllUsers>
+                element: <AllUsers />
             },
             {
                 path: 'my-requests',
-                element:<MyDonationRequests></MyDonationRequests>
+                element: <MyDonationRequests />
             }
         ],
-    },
+    }
+
 ])
 
 export default router

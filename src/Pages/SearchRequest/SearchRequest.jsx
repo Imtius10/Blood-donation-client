@@ -26,11 +26,12 @@ const SearchRequest = () => {
     }, []);
 
     const handleDistrictChange = (e) => {
-        const selectedDistrict = e.target.value;
-        setSearchForm({ ...searchForm, district: selectedDistrict, upazila: "" });
+        const selectedDistrictId = e.target.value;
+        const selectedDistrict = districts.find(d => d.id === selectedDistrictId);
+        setSearchForm({ ...searchForm, district: selectedDistrict?.name || "", upazila: "" });
 
         const filtered = upazilas.filter(
-            (upazila) => upazila.district_id === selectedDistrict
+            (upazila) => upazila.district_id === selectedDistrictId
         );
         setFilteredUpazilas(filtered);
     };
@@ -41,21 +42,16 @@ const SearchRequest = () => {
         setSearched(true);
 
         try {
-            // Get the actual names instead of IDs
-            const selectedDistrict = districts.find(d => d.id === searchForm.district);
-            const selectedUpazila = upazilas.find(u => u.id === searchForm.upazila);
-
             const params = new URLSearchParams();
             if (searchForm.bloodGroup) params.append('bloodGroup', searchForm.bloodGroup);
-            if (selectedDistrict) params.append('district', selectedDistrict.name);
-            if (selectedUpazila) params.append('upazila', selectedUpazila.name);
-
-            console.log('Searching with params:', params.toString());
+            if (searchForm.district) params.append('district', searchForm.district);
+            if (searchForm.upazila) {
+                const upazilaName = upazilas.find(u => u.id === searchForm.upazila)?.name;
+                if (upazilaName) params.append('upazila', upazilaName);
+            }
 
             const response = await axiosInstance.get(`/search-donors?${params.toString()}`);
-            console.log('Search response:', response.data);
-
-            setDonors(response.data.donors || response.data || []);
+            setDonors(response.data.donors || []);
         } catch (error) {
             console.error("Error searching donors:", error);
             setDonors([]);
@@ -105,9 +101,7 @@ const SearchRequest = () => {
                                 >
                                     <option value="">Select Blood Group</option>
                                     {bloodGroups.map((group) => (
-                                        <option key={group} value={group}>
-                                            {group}
-                                        </option>
+                                        <option key={group} value={group}>{group}</option>
                                     ))}
                                 </select>
                             </div>
@@ -119,16 +113,14 @@ const SearchRequest = () => {
                                     District *
                                 </label>
                                 <select
-                                    value={searchForm.district}
+                                    value={districts.find(d => d.name === searchForm.district)?.id || ""}
                                     onChange={handleDistrictChange}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
                                     required
                                 >
                                     <option value="">Select District</option>
                                     {districts.map((dist) => (
-                                        <option key={dist.id} value={dist.id}>
-                                            {dist.name}
-                                        </option>
+                                        <option key={dist.id} value={dist.id}>{dist.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -148,9 +140,7 @@ const SearchRequest = () => {
                                 >
                                     <option value="">Select Upazila</option>
                                     {filteredUpazilas.map((upz) => (
-                                        <option key={upz.id} value={upz.id}>
-                                            {upz.name}
-                                        </option>
+                                        <option key={upz.id} value={upz.id}>{upz.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -211,9 +201,9 @@ const SearchRequest = () => {
                                 >
                                     <div className="bg-gradient-to-r from-red-600 to-red-500 p-6 text-white">
                                         <div className="flex items-center gap-4">
-                                            {donor.photoURL || donor.photo ? (
+                                            {donor.photoURL || donor.mainPhotoUrl ? (
                                                 <img
-                                                    src={donor.photoURL || donor.photo}
+                                                    src={donor.photoURL || donor.mainPhotoUrl}
                                                     alt={donor.name}
                                                     className="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover"
                                                 />
@@ -235,12 +225,8 @@ const SearchRequest = () => {
                                         <div className="flex items-start gap-3 text-gray-600">
                                             <FaMapMarkerAlt className="text-red-600 mt-1 flex-shrink-0" />
                                             <div>
-                                                <p className="font-medium text-gray-800">
-                                                    {districts.find(d => d.id === donor.district)?.name || donor.district}
-                                                </p>
-                                                <p className="text-sm">
-                                                    {upazilas.find(u => u.id === donor.upazila)?.name || donor.upazila}
-                                                </p>
+                                                <p className="font-medium text-gray-800">{donor.district}</p>
+                                                <p className="text-sm">{donor.upazila}</p>
                                             </div>
                                         </div>
 
