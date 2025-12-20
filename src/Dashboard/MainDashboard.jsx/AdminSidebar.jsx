@@ -10,11 +10,11 @@ import {
     ChevronLeft,
     ChevronRight,
     LogOut,
-    User,   // 👈 added
+    User,
 } from "lucide-react";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 
-export default function AdminSidebar() {
+export default function DashboardSidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const { role, logoutUser } = useContext(AuthContext);
 
@@ -47,49 +47,65 @@ export default function AdminSidebar() {
 
             {/* Navigation */}
             <nav className="p-3 space-y-1">
-                {/* Everyone */}
+
+                {/* Dashboard (ALL) */}
                 <NavLink to="/dashboard" className={linkStyle}>
                     <LayoutDashboard size={20} />
                     {!collapsed && "Dashboard"}
                 </NavLink>
 
-                {/* Profile (Everyone) */}
+                {/* Profile (ALL) */}
                 <NavLink to="/dashboard/profile" className={linkStyle}>
                     <User size={20} />
                     {!collapsed && "My Profile"}
                 </NavLink>
 
-                {/* Admin & Volunteer */}
-                {(role === "admin" || role === "volunteer") && (
-                    <NavLink to="/dashboard/add-request" className={linkStyle}>
-                        <Droplet size={20} />
-                        {!collapsed && "Create Blood Request"}
-                    </NavLink>
-                )}
-
-                {/* Admin only */}
+                {/* ================= ADMIN ================= */}
                 {role === "admin" && (
-                    <NavLink to="/dashboard/all-user" className={linkStyle}>
-                        <Users size={20} />
-                        {!collapsed && "User Management"}
-                    </NavLink>
+                    <>
+                        <NavLink to="/dashboard/all-user" className={linkStyle}>
+                            <Users size={20} />
+                            {!collapsed && "User Management"}
+                        </NavLink>
+
+                        <NavLink to="/dashboard/add-request" className={linkStyle}>
+                            <Droplet size={20} />
+                            {!collapsed && "Create Blood Request"}
+                        </NavLink>
+
+                        <NavLink to="/dashboard/analytics" className={linkStyle}>
+                            <BarChart3 size={20} />
+                            {!collapsed && "Analytics"}
+                        </NavLink>
+                    </>
                 )}
 
-                {/* Everyone */}
-                <NavLink to="/dashboard/my-requests" className={linkStyle}>
-                    <ClipboardList size={20} />
-                    {!collapsed && "Donation Requests"}
-                </NavLink>
+                {/* ================= VOLUNTEER ================= */}
+                {role === "volunteer" && (
+                    <>
+                        <NavLink to="/dashboard/add-request" className={linkStyle}>
+                            <Droplet size={20} />
+                            {!collapsed && "Create Blood Request"}
+                        </NavLink>
 
-                {/* Admin only */}
-                {role === "admin" && (
-                    <NavLink to="/dashboard/analytics" className={linkStyle}>
-                        <BarChart3 size={20} />
-                        {!collapsed && "Analytics"}
-                    </NavLink>
+                        <NavLink to="/dashboard/my-requests" className={linkStyle}>
+                            <ClipboardList size={20} />
+                            {!collapsed && "Manage Requests"}
+                        </NavLink>
+                    </>
                 )}
 
-                {/* Everyone */}
+                {/* ================= DONOR ================= */}
+                {role === "donor" && (
+                    <>
+                        <NavLink to="/dashboard/my-requests" className={linkStyle}>
+                            <ClipboardList size={20} />
+                            {!collapsed && "Donation Requests"}
+                        </NavLink>
+                    </>
+                )}
+
+                {/* Settings (ALL) */}
                 <NavLink to="/dashboard/settings" className={linkStyle}>
                     <Settings size={20} />
                     {!collapsed && "Settings"}

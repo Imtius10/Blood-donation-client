@@ -6,91 +6,99 @@ import Register from "../Pages/Register/Register";
 
 import DashboardLayouts from "../DashboardLayouts/DashboardLayouts";
 
-
 import ManageDashboard from "../Dashboard/ManageDashboard/ManageDashboard";
-
 import CreateDonationRequest from "../Dashboard/AddRequest/CreateDonationRequest";
 import AllUsers from "../Dashboard/AllUsers/AllUsers";
-import PrivateRoutes from "../Private/PrivateRoutes";
 import MyDonationRequests from "../Dashboard/MyDonationRequest/MyDonationRequests";
-import Donate from "../Dashboard/Donate/Donate";
-import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
-import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import DashboardHome from "../Dashboard/DashboardHome";
 import DashboardProfile from "../Dashboard/DashboardProfile";
 import EditDonationRequest from "../Dashboard/EditDonationRequest";
 
+import PrivateRoutes from "../Private/PrivateRoutes";
+import AdminRoute from "../Private/AdminRoute";
+import VolunteerRoute from "../Private/VolunteerRoute";
+import DonorRoute from "../Private/DonorRoute";
 
-
-
+import Donate from "../Dashboard/Donate/Donate";
+import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
+import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <RootLayout></RootLayout>,
+        element: <RootLayout />,
         children: [
-            {
-                index: true,
-                element: <Home></Home>
-            },
-            {
-                path: '/login',
-                element: <Login></Login>
-            },
-            {
-                path: '/register',
-                element: <Register></Register>
-            },
-            {
-                path: '/donate',
-                element: <Donate></Donate>
-            },
-            {
-                path: '/payment-success',
-                element: <PaymentSuccess></PaymentSuccess>
-            },
-            {
-                path: '/search-request',
-                element: <SearchRequest></SearchRequest>
-            }
-        ]
+            { index: true, element: <Home /> },
+            { path: "/login", element: <Login /> },
+            { path: "/register", element: <Register /> },
+            { path: "/donate", element: <Donate /> },
+            { path: "/payment-success", element: <PaymentSuccess /> },
+            { path: "/search-request", element: <SearchRequest /> },
+        ],
     },
+
     {
         path: "/dashboard",
-        element: <PrivateRoutes><DashboardLayouts /></PrivateRoutes>,
+        element: (
+            <PrivateRoutes>
+                <DashboardLayouts />
+            </PrivateRoutes>
+        ),
         children: [
+            // ✅ Everyone
+            { index: true, element: <DashboardHome /> },
+
+            { path: "profile", element: <DashboardProfile /> },
+
+            // 🩸 Donor only
             {
-                index: true, 
-                element: <DashboardHome />
+                path: "my-requests",
+                element: (
+                    <DonorRoute>
+                        <MyDonationRequests />
+                    </DonorRoute>
+                ),
             },
+
+            // 🤝 Volunteer + Admin
             {
-                path: 'add-request',
-                element: <CreateDonationRequest />
+                path: "add-request",
+                element: (
+                    <VolunteerRoute>
+                        <CreateDonationRequest />
+                    </VolunteerRoute>
+                ),
             },
-            {
-                path: 'manageproduct',
-                element: <ManageDashboard />
-            },
-            {
-                path: 'all-user',
-                element: <AllUsers />
-            },
-            {
-                path: 'my-requests',
-                element: <MyDonationRequests />
-            },
-            {
-                path: "profile",
-                element: <DashboardProfile />
-            },
+
             {
                 path: "edit-request/:id",
-                element: <EditDonationRequest />
-            }
+                element: (
+                    <VolunteerRoute>
+                        <EditDonationRequest />
+                    </VolunteerRoute>
+                ),
+            },
 
+            // 🌐 Admin only
+            {
+                path: "all-user",
+                element: (
+                    <AdminRoute>
+                        <AllUsers />
+                    </AdminRoute>
+                ),
+            },
+
+            {
+                path: "manageproduct",
+                element: (
+                    <AdminRoute>
+                        <ManageDashboard />
+                    </AdminRoute>
+                ),
+            },
         ],
-    }
+    },
+]);
 
-])
-
-export default router
+export default router;

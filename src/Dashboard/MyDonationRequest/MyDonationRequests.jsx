@@ -19,8 +19,12 @@ const MyDonationRequests = () => {
             });
     }, [axiosSecure, currentPage, itemsPerPage, status]);
 
-    const totalPages = Math.ceil(totalRequest / itemsPerPage);
 
+    const totalPages = Math.ceil(totalRequest / itemsPerPage);
+    console.log(myRequests);
+    console.log(status);
+    
+    
     return (
         <div className="p-6 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-semibold mb-4">
@@ -60,7 +64,7 @@ const MyDonationRequests = () => {
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody key={status}>
                         {myRequests.length === 0 ? (
                             <tr>
                                 <td colSpan="7" className="text-center py-4">
@@ -71,28 +75,21 @@ const MyDonationRequests = () => {
                             myRequests.map((req, index) => (
                                 <tr key={req._id}>
                                     <td>
-                                        {(currentPage - 1) * itemsPerPage +
-                                            index +
-                                            1}
+                                        {(currentPage - 1) * itemsPerPage + index + 1}
                                     </td>
                                     <td>{req.recipientName}</td>
                                     <td>{req.bloodGroup}</td>
-                                    <td>
-                                        {req.upazila}, {req.district}
-                                    </td>
+                                    <td>{req.upazila}, {req.district}</td>
                                     <td>{req.hospitalName}</td>
                                     <td>{req.donationDate}</td>
                                     <td>
                                         <span
                                             className={`px-2 py-1 rounded text-sm capitalize
-                                            ${req.donation_status ===
-                                                    "pending"
+                        ${req.donation_status === "pending"
                                                     ? "bg-yellow-100 text-yellow-700"
-                                                    : req.donation_status ===
-                                                        "inprogress"
+                                                    : req.donation_status === "inprogress"
                                                         ? "bg-blue-100 text-blue-700"
-                                                        : req.donation_status ===
-                                                            "done"
+                                                        : req.donation_status === "done"
                                                             ? "bg-green-100 text-green-700"
                                                             : "bg-red-100 text-red-700"
                                                 }`}
@@ -104,6 +101,7 @@ const MyDonationRequests = () => {
                             ))
                         )}
                     </tbody>
+
                 </table>
             </div>
 
