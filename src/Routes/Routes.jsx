@@ -22,6 +22,7 @@ import DonorRoute from "../Private/DonorRoute";
 import Donate from "../Dashboard/Donate/Donate";
 import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
+import AllUserRequests from "../Dashboard/Admin/AllUserRequests";
 
 const router = createBrowserRouter([
     {
@@ -97,6 +98,15 @@ const router = createBrowserRouter([
                     </AdminRoute>
                 ),
             },
+            {
+                path: "all-requests",
+                element: (
+                    <AdminRoute>
+                        <AllUserRequests />
+                    </AdminRoute>
+                ),
+            },
+
         ],
     },
 ]);

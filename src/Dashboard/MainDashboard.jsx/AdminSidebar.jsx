@@ -73,9 +73,9 @@ export default function DashboardSidebar() {
                             {!collapsed && "Create Blood Request"}
                         </NavLink>
 
-                        <NavLink to="/dashboard/analytics" className={linkStyle}>
+                        <NavLink to="/dashboard/all-requests" className={linkStyle}>
                             <BarChart3 size={20} />
-                            {!collapsed && "Analytics"}
+                            {!collapsed && "All Users"}
                         </NavLink>
                     </>
                 )}
