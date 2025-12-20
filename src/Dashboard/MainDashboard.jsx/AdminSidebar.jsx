@@ -10,6 +10,7 @@ import {
     ChevronLeft,
     ChevronRight,
     LogOut,
+    User,   // 👈 added
 } from "lucide-react";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 
@@ -19,7 +20,7 @@ export default function AdminSidebar() {
 
     const linkStyle = ({ isActive }) =>
         `flex items-center gap-3 px-3 py-2 rounded-lg transition
-     ${isActive
+        ${isActive
             ? "bg-red-600 text-white"
             : "text-slate-300 hover:bg-slate-800 hover:text-white"
         }`;
@@ -27,12 +28,14 @@ export default function AdminSidebar() {
     return (
         <aside
             className={`h-screen bg-slate-900 text-white transition-all duration-300
-      ${collapsed ? "w-20" : "w-64"}`}
+            ${collapsed ? "w-20" : "w-64"}`}
         >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-700">
                 {!collapsed && (
-                    <h1 className="font-bold text-lg text-red-500">Blood Admin</h1>
+                    <h1 className="font-bold text-lg text-red-500">
+                        Blood Dashboard
+                    </h1>
                 )}
                 <button
                     onClick={() => setCollapsed(!collapsed)}
@@ -44,35 +47,49 @@ export default function AdminSidebar() {
 
             {/* Navigation */}
             <nav className="p-3 space-y-1">
+                {/* Everyone */}
                 <NavLink to="/dashboard" className={linkStyle}>
                     <LayoutDashboard size={20} />
                     {!collapsed && "Dashboard"}
                 </NavLink>
 
-                {
-                    role == 'admin' && (
-                        <NavLink to="/dashboard/add-request" className={linkStyle}>
-                            <Droplet size={20} />
-                            {!collapsed && "Create Blood Request"}
-                        </NavLink>
-                    )
-                }
-
-                <NavLink to="/dashboard/all-user" className={linkStyle}>
-                    <Users size={20} />
-                    {!collapsed && "Donors & Users"}
+                {/* Profile (Everyone) */}
+                <NavLink to="/dashboard/profile" className={linkStyle}>
+                    <User size={20} />
+                    {!collapsed && "My Profile"}
                 </NavLink>
 
+                {/* Admin & Volunteer */}
+                {(role === "admin" || role === "volunteer") && (
+                    <NavLink to="/dashboard/add-request" className={linkStyle}>
+                        <Droplet size={20} />
+                        {!collapsed && "Create Blood Request"}
+                    </NavLink>
+                )}
+
+                {/* Admin only */}
+                {role === "admin" && (
+                    <NavLink to="/dashboard/all-user" className={linkStyle}>
+                        <Users size={20} />
+                        {!collapsed && "User Management"}
+                    </NavLink>
+                )}
+
+                {/* Everyone */}
                 <NavLink to="/dashboard/my-requests" className={linkStyle}>
                     <ClipboardList size={20} />
                     {!collapsed && "Donation Requests"}
                 </NavLink>
 
-                <NavLink to="/dashboard/analytics" className={linkStyle}>
-                    <BarChart3 size={20} />
-                    {!collapsed && "Donation Analytics"}
-                </NavLink>
+                {/* Admin only */}
+                {role === "admin" && (
+                    <NavLink to="/dashboard/analytics" className={linkStyle}>
+                        <BarChart3 size={20} />
+                        {!collapsed && "Analytics"}
+                    </NavLink>
+                )}
 
+                {/* Everyone */}
                 <NavLink to="/dashboard/settings" className={linkStyle}>
                     <Settings size={20} />
                     {!collapsed && "Settings"}
@@ -84,8 +101,8 @@ export default function AdminSidebar() {
                 <button
                     onClick={logoutUser}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
-          text-red-400 hover:bg-red-500/10 transition
-          ${collapsed && "justify-center"}`}
+                    text-red-400 hover:bg-red-500/10 transition
+                    ${collapsed && "justify-center"}`}
                 >
                     <LogOut size={20} />
                     {!collapsed && "Logout"}

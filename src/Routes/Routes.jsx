@@ -17,6 +17,7 @@ import Donate from "../Dashboard/Donate/Donate";
 import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import DashboardHome from "../Dashboard/DashboardHome";
+import DashboardProfile from "../Dashboard/DashboardProfile";
 
 
 
@@ -76,7 +77,12 @@ const router = createBrowserRouter([
             {
                 path: 'my-requests',
                 element: <MyDonationRequests />
+            },
+            {
+                path: "profile",
+                element: <DashboardProfile />
             }
+
         ],
     }
 
