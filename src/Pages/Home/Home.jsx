@@ -12,6 +12,10 @@ import ImpactStats from "./ImpactStats";
 import Testimonials from "./Testimonials";
 import BloodAvailability from "./BloodAvailability";
 import EmergencyCTA from "./EmergencyCTA";
+import AdminDonationRequests from "../../Dashboard/Admin/AdminDonationRequests";
+
+import AdminDonationRequestsPage from "../../Dashboard/Admin/AdminDonationRequestsPage";
+import AdminDonationRequestsPreview from "../../Dashboard/Admin/AdminDonationRequestsPreview";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -49,7 +53,7 @@ const Home = () => {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={() => navigate("/search")}
+                                onClick={() => navigate("/search-request")}
                                 className="px-6 py-3 border border-white font-semibold rounded-lg"
                             >
                                 Search Donors
@@ -202,7 +206,10 @@ const Home = () => {
 
                 </div>
             </section>
-        </div>
+            <div className="my-5 mx-16">
+                <AdminDonationRequestsPreview></AdminDonationRequestsPreview>
+            </div>
+           </div>
     );
 };
 

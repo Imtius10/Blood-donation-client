@@ -24,11 +24,15 @@ import PaymentSuccess from "../PaymentSuccess/PaymentSuccess";
 import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import AllUserRequests from "../Dashboard/Admin/AllUserRequests";
 import AdminDonationStats from "../Dashboard/Admin/AdminDonationStats";
+import AdminDonationRequestsPage from "../Dashboard/Admin/AdminDonationRequestsPage";
+import AdminDonationRequests from "../Dashboard/Admin/AdminDonationRequests";
+import ErrorPage from "../Pages/Error/ErrorPage";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <RootLayout />,
+        errorElement:<ErrorPage></ErrorPage>,
         children: [
             { index: true, element: <Home /> },
             { path: "/login", element: <Login /> },
@@ -36,6 +40,14 @@ const router = createBrowserRouter([
             { path: "/donate", element: <Donate /> },
             { path: "/payment-success", element: <PaymentSuccess /> },
             { path: "/search-request", element: <SearchRequest /> },
+            {
+                path: 'donation-requests',
+                element: (
+                    <PrivateRoutes>
+                        <AdminDonationRequestsPage></AdminDonationRequestsPage>
+                    </PrivateRoutes>
+                )
+            }
         ],
     },
 
@@ -46,13 +58,14 @@ const router = createBrowserRouter([
                 <DashboardLayouts />
             </PrivateRoutes>
         ),
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             // ✅ Everyone
             { index: true, element: <DashboardHome /> },
 
             { path: "profile", element: <DashboardProfile /> },
 
-            // 🩸 Donor only
+           
             {
                 path: "my-requests",
                 element: (
@@ -114,7 +127,8 @@ const router = createBrowserRouter([
                         <AdminDonationStats></AdminDonationStats>
                     </AdminRoute>
                 )
-            }
+            },
+           
 
         ],
     },
