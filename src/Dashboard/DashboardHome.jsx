@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import AdminDonationStats from "./Admin/AdminDonationStats";
+import AdminDonationRequests from "./Admin/AdminDonationRequests";
 
 const DashboardHome = () => {
     const { user } = useContext(AuthContext);
@@ -226,6 +227,7 @@ const DashboardHome = () => {
 
                 {/* Admin Donation Stats */}
                 <AdminDonationStats />
+                <AdminDonationRequests></AdminDonationRequests>
             </div>
         </div>
     );
