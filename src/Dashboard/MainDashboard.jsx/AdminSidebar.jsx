@@ -115,10 +115,7 @@ export default function DashboardSidebar() {
         )}
 
         {/* Settings (ALL) */}
-        <NavLink to="/dashboard/settings" className={linkStyle}>
-          <Settings size={20} />
-          {!collapsed && "Settings"}
-        </NavLink>
+        
       </nav>
 
       {/* Logout */}

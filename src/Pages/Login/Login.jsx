@@ -96,15 +96,7 @@ const Login = () => {
                     </button>
                 </form>
 
-                {/* Google */}
-                <div className="flex items-center justify-center mt-4">
-                    <button
-                        onClick={handleGoogleSignIn}
-                        className="flex items-center gap-2 border border-gray-300 p-2 rounded-lg hover:bg-gray-100 w-full justify-center"
-                    >
-                        <FcGoogle size={22} /> Continue with Google
-                    </button>
-                </div>
+     
 
                 {/* Footer */}
                 <p className="text-center text-sm text-gray-500 mt-6">

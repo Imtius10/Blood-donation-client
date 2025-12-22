@@ -205,13 +205,8 @@ const Register = () => {
                     </button>
                 </form>
 
-                {/* Google */}
-                <button
-                    onClick={signInWithGoogle}
-                    className="mt-4 w-full flex items-center justify-center gap-2 border rounded-lg p-3 hover:bg-gray-100"
-                >
-                    <FcGoogle size={22} /> Continue with Google
-                </button>
+             
+           
 
                 <p className="text-center mt-4 text-sm">
                     Already a donor?{" "}
