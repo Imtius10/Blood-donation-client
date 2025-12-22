@@ -138,7 +138,7 @@ const AllUsers = () => {
                                                 }
                                                 className="border px-2 py-1 rounded"
                                             >
-                                                <option value="user">User</option>
+                                                <option value="volunteer">Volunteer</option>
                                                 <option value="donor">Donor</option>
                                                 <option value="admin">Admin</option>
                                             </select>
@@ -152,7 +152,7 @@ const AllUsers = () => {
                                                 className="border px-2 py-1 rounded"
                                             >
                                                 <option value="active">Active</option>
-                                                <option value="inactive">Inactive</option>
+                                                <option value="block">Block</option>
                                             </select>
 
                                             {/* Single Update Button */}
