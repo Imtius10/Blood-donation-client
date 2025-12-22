@@ -7,18 +7,18 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
 
-    apiKey: import.meta.env.VITE_apiKey,
-    authDomain: import.meta.env.VITE_authDomain,
-    projectId: import.meta.env.VITE_projectId,
-    storageBucket: import.meta.env.VITE_storageBucket,
-    messagingSenderId: import.meta.env.VITE_messagingSenderId,
-    appId: import.meta.env.VITE_appId,
-    // apiKey: "AIzaSyDiQfC_PvGNRLcjJulmQq4y2HIFcxUzreQ",
-    // authDomain: "module11-7b982.firebaseapp.com",
-    // projectId: "module11-7b982",
-    // storageBucket: "module11-7b982.firebasestorage.app",
-    // messagingSenderId: "989656260652",
-    // appId: "1:989656260652:web:ac3d12368a9cea8a677189"
+    // apiKey: import.meta.env.VITE_apiKey,
+    // authDomain: import.meta.env.VITE_authDomain,
+    // projectId: import.meta.env.VITE_projectId,
+    // storageBucket: import.meta.env.VITE_storageBucket,
+    // messagingSenderId: import.meta.env.VITE_messagingSenderId,
+    // appId: import.meta.env.VITE_appId,
+    apiKey: "AIzaSyDiQfC_PvGNRLcjJulmQq4y2HIFcxUzreQ",
+    authDomain: "module11-7b982.firebaseapp.com",
+    projectId: "module11-7b982",
+    storageBucket: "module11-7b982.firebasestorage.app",
+    messagingSenderId: "989656260652",
+    appId: "1:989656260652:web:ac3d12368a9cea8a677189"
 };
 
 // Initialize Firebase

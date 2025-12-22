@@ -57,7 +57,7 @@ export default function DashboardSidebar() {
                 {/* Profile (ALL) */}
                 <NavLink to="/dashboard/profile" className={linkStyle}>
                     <User size={20} />
-                    {!collapsed && "My Profile"}
+                    {!collapsed && "Update My Profile"}
                 </NavLink>
 
                 {/* ================= ADMIN ================= */}
@@ -117,7 +117,7 @@ export default function DashboardSidebar() {
             </nav>
 
             {/* Logout */}
-            <div className="p-3 border-t border-slate-700">
+            <div className="p-3 border-t border-slate-700 flex">
                 <button
                     onClick={logoutUser}
                     className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
@@ -127,7 +127,17 @@ export default function DashboardSidebar() {
                     <LogOut size={20} />
                     {!collapsed && "Logout"}
                 </button>
+                 <button
+                    
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
+                    text-red-400 hover:bg-red-500/10 transition
+                    ${collapsed && "justify-center"}`}
+                >
+                    <LogOut size={20} />
+                    {!collapsed && "Home"}
+                </button>
             </div>
+            
         </aside>
     );
 }
