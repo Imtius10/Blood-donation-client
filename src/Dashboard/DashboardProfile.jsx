@@ -4,6 +4,7 @@ import { AuthContext } from "../AuthProvider/AuthProvider";
 import { FaEdit, FaSave, FaUserCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxios from "../Hooks/UseAxios";
+import Loading from "../Private/Loading";
 
 const DashboardProfile = () => {
     const { user, setUser } = useContext(AuthContext);
@@ -69,9 +70,7 @@ const DashboardProfile = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-spin h-12 w-12 border-4 border-red-600 border-t-transparent rounded-full"></div>
-            </div>
+           <Loading></Loading>
         );
     }
 

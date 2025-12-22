@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import toast, { Toaster } from "react-hot-toast";
+import Loading from "../../Private/Loading";
 
 const AllUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -81,7 +82,7 @@ const AllUsers = () => {
             {/* Users Table */}
             <div className="bg-white shadow-lg rounded-xl overflow-hidden">
                 {loading ? (
-                    <div className="p-6 text-center text-gray-500">Loading users...</div>
+                    <Loading></Loading>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">

@@ -1,27 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import useAxiosSecure from "../../Hooks/UseAxiosSecure";
+import { AuthContext } from "../../AuthProvider/AuthProvider"; 
 import Swal from "sweetalert2";
 
 const MyDonationRequests = () => {
     const axiosSecure = useAxiosSecure();
+    const { user } = useContext(AuthContext); 
+
     const [myRequests, setMyRequests] = useState([]);
     const [totalRequest, setTotalRequest] = useState(0);
     const [itemsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [status, setStatus] = useState("all");
 
-    // Location States
+    
+    const [mongoUser, setMongoUser] = useState(null);
+
+   
     const [districts, setDistricts] = useState([]);
     const [upazilas, setUpazilas] = useState([]);
     const [filteredUpazilas, setFilteredUpazilas] = useState([]);
 
-    // Modal States
+   
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState(null);
-    
-    // NOTE: Replace this with your actual Auth logic (e.g., const { userRole } = useAuth();)
-    const userRole = "user"; 
+
+   
+    useEffect(() => {
+        if (user?.email) {
+            axiosSecure.get(`/users/role/${user.email}`)
+                .then(res => {
+                    setMongoUser(res.data);
+                })
+                .catch(err => console.error("Error fetching MongoDB role:", err));
+        }
+    }, [user?.email, axiosSecure]);
+
+   
+    const userRole = mongoUser?.role || "donor";
 
     useEffect(() => {
         axios.get("/district.json").then((res) => setDistricts(res.data.districts));
@@ -29,6 +46,7 @@ const MyDonationRequests = () => {
     }, []);
 
     const fetchRequests = () => {
+        if (!user?.email) return;
         axiosSecure
             .get(`/my-requests?page=${currentPage - 1}&size=${itemsPerPage}&status=${status}`)
             .then((res) => {
@@ -39,7 +57,7 @@ const MyDonationRequests = () => {
 
     useEffect(() => {
         fetchRequests();
-    }, [axiosSecure, currentPage, itemsPerPage, status]);
+    }, [axiosSecure, currentPage, itemsPerPage, status, user?.email]);
 
     const handleDistrictChange = (e) => {
         const selectedDistrictId = e.target.value;
@@ -51,7 +69,6 @@ const MyDonationRequests = () => {
         e.preventDefault();
         const form = e.target;
         
-        // Find names based on selected IDs in the form
         const districtName = districts.find(d => d.id === form.district.value)?.name || selectedRequest.district;
         const upazilaName = upazilas.find(u => u.id === form.upazila.value)?.name || selectedRequest.upazila;
 
@@ -61,14 +78,14 @@ const MyDonationRequests = () => {
             district: districtName,
             upazila: upazilaName,
             hospitalName: form.hospitalName.value,
-            address: form.address.value, // Added Address
+            address: form.address.value, 
             donationDate: form.donationDate.value,
             donationTime: form.donationTime.value,
             message: form.message.value,
         };
 
-        // Only send status if the user is an admin
-        if (userRole === 'admin') {
+        // Strict role check for updating status
+        if (userRole === 'admin' || userRole === 'volunteer') {
             updatedDoc.donation_status = form.donation_status.value;
         }
 
@@ -88,7 +105,10 @@ const MyDonationRequests = () => {
         <div className="p-6 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-bold mb-4">My Donation Requests</h2>
             
-            {/* ... Your Filter Logic ... */}
+            {/* Role indicator for UI feedback */}
+            <div className="mb-4">
+                <span className="badge badge-secondary capitalize">Role: {userRole}</span>
+            </div>
 
             <div className="overflow-x-auto">
                 <table className="table w-full border">
@@ -104,7 +124,11 @@ const MyDonationRequests = () => {
                                 <td>{req.recipientName}</td>
                                 <td>{req.bloodGroup}</td>
                                 <td>{req.upazila}, {req.district}</td>
-                                <td>{req.donation_status}</td>
+                                <td>
+                                    <span className={`badge ${req.donation_status === 'pending' ? 'badge-warning' : 'badge-success'}`}>
+                                        {req.donation_status}
+                                    </span>
+                                </td>
                                 <td>
                                     <button onClick={() => {
                                         setSelectedRequest(req);
@@ -125,7 +149,7 @@ const MyDonationRequests = () => {
                     <div className="bg-white rounded-lg p-6 w-full max-w-2xl overflow-y-auto max-h-[90vh]">
                         <h3 className="text-xl font-bold mb-6 text-red-600">Edit Donation Request</h3>
                         <form onSubmit={handleUpdate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            
+                            {/* ... inputs same as before ... */}
                             <div className="form-control">
                                 <label className="label font-semibold">Recipient Name</label>
                                 <input name="recipientName" defaultValue={selectedRequest.recipientName} required className="input input-bordered" />
@@ -181,10 +205,10 @@ const MyDonationRequests = () => {
                                 <input name="donationTime" type="time" defaultValue={selectedRequest.donationTime} className="input input-bordered" />
                             </div>
 
-                            {/* STATUS HIDDEN FOR USERS - ONLY SHOWN TO ADMIN */}
-                            {userRole === "admin" && (
+                            {/* ROLE CHECK: Show status only to Admin or Volunteer from MongoDB */}
+                            {(userRole === "admin" || userRole === "volunteer") && (
                                 <div className="form-control md:col-span-2">
-                                    <label className="label font-semibold text-blue-600">Donation Status (Admin Only)</label>
+                                    <label className="label font-semibold text-blue-600">Donation Status ({userRole} Control)</label>
                                     <select name="donation_status" defaultValue={selectedRequest.donation_status} className="select select-bordered border-blue-400">
                                         <option value="pending">Pending</option>
                                         <option value="inprogress">In Progress</option>

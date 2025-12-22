@@ -2,17 +2,17 @@ const Loading = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
             <div className="relative">
-                {/* Outer Glow Animation */}
+              
                 <div className="absolute inset-0 rounded-full bg-red-500 opacity-20 animate-ping"></div>
 
-                {/* The Blood Drop / Heart */}
+                
                 <div className="relative bg-red-600 h-16 w-16 rounded-full rounded-tr-none rotate-45 animate-bounce flex items-center justify-center shadow-2xl border-4 border-white">
-                    {/* Small white reflection on the drop */}
+                   
                     <div className="absolute top-2 left-2 w-3 h-5 bg-white opacity-30 rounded-full -rotate-45"></div>
                 </div>
             </div>
 
-            {/* Aesthetic Text */}
+            
             <div className="mt-8 text-center">
                 <h2 className="text-xl font-black text-gray-800 tracking-widest uppercase">
                     Blood<span className="text-red-600">Share</span>

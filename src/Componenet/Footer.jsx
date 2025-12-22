@@ -46,10 +46,10 @@ const Footer = () => {
                 <div>
                     <h3 className="text-white font-semibold mb-4">Support</h3>
                     <ul className="space-y-2 text-sm">
-                        <li><a href="#" className="hover:text-red-400 transition">FAQs</a></li>
-                        <li><a href="#" className="hover:text-red-400 transition">Privacy Policy</a></li>
-                        <li><a href="#" className="hover:text-red-400 transition">Terms & Conditions</a></li>
-                        <li><a href="#" className="hover:text-red-400 transition">Contact Us</a></li>
+                        <li><a href="/faq" className="hover:text-red-400 transition">FAQs</a></li>
+                        <li><a href="/privacy-policy" className="hover:text-red-400 transition">Privacy Policy</a></li>
+                        <li><a href="/terms" className="hover:text-red-400 transition">Terms & Conditions</a></li>
+                        <li><a href="/contact" className="hover:text-red-400 transition">Contact Us</a></li>
                     </ul>
                 </div>
 
@@ -59,7 +59,7 @@ const Footer = () => {
                     <ul className="space-y-3 text-sm">
                         <li className="flex items-center gap-2">
                             <PhoneCall size={16} />
-                            +880 1XXXXXXXXX
+                            +880 1234 567890
                         </li>
                         <li className="flex items-center gap-2">
                             <Mail size={16} />
@@ -73,10 +73,10 @@ const Footer = () => {
 
                     {/* Social */}
                     <div className="flex gap-4 mt-6">
-                        <a className="hover:text-red-500 transition" href="#"><Facebook /></a>
-                        <a className="hover:text-red-500 transition" href="#"><Twitter /></a>
-                        <a className="hover:text-red-500 transition" href="#"><Instagram /></a>
-                        <a className="hover:text-red-500 transition" href="#"><Linkedin /></a>
+                        <a className="hover:text-red-500 transition" href="https://www.facebook.com/bloodcare" target="_blank" rel="noopener noreferrer"><Facebook /></a>
+                        <a className="hover:text-red-500 transition" href="https://twitter.com/bloodcare" target="_blank" rel="noopener noreferrer"><Twitter /></a>
+                        <a className="hover:text-red-500 transition" href="https://www.instagram.com/bloodcare" target="_blank" rel="noopener noreferrer"><Instagram /></a>
+                        <a className="hover:text-red-500 transition" href="https://www.linkedin.com/company/bloodcare" target="_blank" rel="noopener noreferrer"><Linkedin /></a>
                     </div>
                 </div>
             </div>

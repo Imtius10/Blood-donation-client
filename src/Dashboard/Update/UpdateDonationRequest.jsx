@@ -10,14 +10,15 @@ import {
   FaHospital,
 } from "react-icons/fa";
 import useAxios from "../../Hooks/UseAxios";
+import Loading from "../../Private/Loading";
 
 const UpdateDonationRequest = () => {
   const axiosSecure = useAxiosSecure();
   const axiosInstance=useAxios();
   const navigate = useNavigate();
   const location = useLocation();
-  const { state } = location; // Contains recipientName if passed from dashboard
-  const { id } = useParams(); // Request ID from the URL
+  const { state } = location; 
+  const { id } = useParams(); 
 
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
@@ -73,7 +74,7 @@ const UpdateDonationRequest = () => {
     }
   };
 
-  if (loading) return <div className="flex justify-center p-20">Loading...</div>;
+  if (loading) return <Loading></Loading>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-red-50 px-4 py-10">

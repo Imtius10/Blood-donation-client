@@ -6,31 +6,47 @@ import {
   Droplet,
   ClipboardList,
   BarChart3,
-  Settings,
   ChevronLeft,
   ChevronRight,
   LogOut,
   User,
   Home,
+  Loader2,
 } from "lucide-react";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 
 export default function DashboardSidebar() {
   const [collapsed, setCollapsed] = useState(false);
-  const { role, logoutUser } = useContext(AuthContext);
+  const {
+    user,
+    role,
+    loading: authLoading,
+    logoutUser,
+  } = useContext(AuthContext);
 
   const linkStyle = ({ isActive }) =>
     `flex items-center gap-3 px-3 py-2 rounded-lg transition
-        ${
-          isActive
-            ? "bg-red-600 text-white"
-            : "text-slate-300 hover:bg-slate-800 hover:text-white"
-        }`;
+      ${
+        isActive
+          ? "bg-red-600 text-white"
+          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+      }`;
+
+  if (authLoading || !role) {
+    // Wait until AuthProvider fetches role
+    return (
+       <aside className="h-screen w-64 bg-slate-900 flex flex-col items-center justify-center">
+      <Loader2 className="animate-spin text-red-500 w-10 h-10 mb-4" />
+      <p className="text-gray-400 text-center">Loading menu...</p>
+    </aside>
+    );
+  }
 
   return (
     <aside
-      className={`h-screen bg-slate-900 text-white transition-all duration-300
-            ${collapsed ? "w-20" : "w-64"}`}
+      className={`h-screen bg-slate-900 text-white transition-all duration-300 ${
+        collapsed ? "w-20" : "w-64"
+      }`}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-slate-700">
@@ -47,35 +63,33 @@ export default function DashboardSidebar() {
 
       {/* Navigation */}
       <nav className="p-3 space-y-1">
-        {/* Dashboard (ALL) */}
         <NavLink to="/dashboard" className={linkStyle}>
           <LayoutDashboard size={20} />
           {!collapsed && "Dashboard"}
         </NavLink>
 
-        {/* Profile (ALL) */}
         <NavLink to="/dashboard/profile" className={linkStyle}>
           <User size={20} />
           {!collapsed && "Update My Profile"}
         </NavLink>
+
         <NavLink to="/dashboard/add-request" className={linkStyle}>
           <Droplet size={20} />
           {!collapsed && "Create Blood Request"}
         </NavLink>
-        {/* <NavLink to="/dashboard/edit-request" className={linkStyle}>
-          <Droplet size={20} />
-          {!collapsed && "Edit Donation Request"}
-        </NavLink> */}
-        {/* ================= ADMIN ================= */}
+
+        <NavLink to="/dashboard/my-requests" className={linkStyle}>
+          <ClipboardList size={20} />
+          {!collapsed && "Donation Requests"}
+        </NavLink>
+
+        {/* ADMIN */}
         {role === "admin" && (
           <>
             <NavLink to="/dashboard/all-user" className={linkStyle}>
               <Users size={20} />
               {!collapsed && "User Management"}
             </NavLink>
-
-         
-
             <NavLink to="/dashboard/all-requests" className={linkStyle}>
               <BarChart3 size={20} />
               {!collapsed && "All Users"}
@@ -87,56 +101,38 @@ export default function DashboardSidebar() {
           </>
         )}
 
-        {/* ================= VOLUNTEER ================= */}
+        {/* VOLUNTEER */}
         {role === "volunteer" && (
           <>
-         
-
-            <NavLink to="/dashboard/my-requests" className={linkStyle}>
+            <NavLink to="/dashboard/all-requests" className={linkStyle}>
               <ClipboardList size={20} />
               {!collapsed && "Manage Requests"}
             </NavLink>
-               <NavLink to="/dashboard/all-requests" className={linkStyle}>
-              <BarChart3 size={20} />
-              {!collapsed && "All Users"}
-            </NavLink>
-          
+
+           
           </>
         )}
 
-        {/* ================= DONOR ================= */}
-        {role === "donor" && (
-          <>
-            <NavLink to="/dashboard/my-requests" className={linkStyle}>
-              <ClipboardList size={20} />
-              {!collapsed && "Donation Requests"}
-            </NavLink>
-          </>
-        )}
-
-        {/* Settings (ALL) */}
-        
+        {/* DONOR */}
       </nav>
 
-      {/* Logout */}
-      <div className="p-3 border-t border-slate-700 flex gap-2">
-        {/* Logout */}
+      {/* Logout & Home */}
+      <div className="p-3 border-t border-slate-700 flex gap-2 mt-auto">
         <button
           onClick={logoutUser}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
-        text-red-400 hover:bg-red-500/10 transition
-        ${collapsed && "justify-center"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition ${
+            collapsed && "justify-center"
+          }`}
         >
           <LogOut size={20} />
           {!collapsed && "Logout"}
         </button>
 
-        {/* Home */}
         <NavLink to={"/"}>
           <button
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
-        text-sky-400 hover:bg-sky-500/10 transition
-        ${collapsed && "justify-center"}`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sky-400 hover:bg-sky-500/10 transition ${
+              collapsed && "justify-center"
+            }`}
           >
             <Home size={20} />
             {!collapsed && "Home"}

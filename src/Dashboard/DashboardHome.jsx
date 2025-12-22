@@ -17,15 +17,13 @@ import AdminDonationRequestOverview from "./Admin/AdminDonationRequestsPreview";
 import AdminDonationList from "./Admin/AdminDonationList";
 
 const DashboardHome = () => {
-    const { user,role } = useContext(AuthContext);
-    const isRole=role;
-//console.log(admin);
-    
-    
+    const { user, role } = useContext(AuthContext);
+    const isRole = role;
     const axiosSecure = useAxiosSecure();
 
     const [recentRequests, setRecentRequests] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [mongoUser, setMongoUser] = useState(null);
 
     const [stats, setStats] = useState({
         total: 0,
@@ -36,27 +34,38 @@ const DashboardHome = () => {
     });
 
     useEffect(() => {
+        if (user?.email) {
+            axiosSecure.get(`/users/role/${user.email}`)
+                .then(res => {
+                    setMongoUser(res.data);
+                })
+                .catch(err => console.error("Error fetching MongoDB name:", err));
+        }
+    }, [user?.email, axiosSecure]);
+
+    useEffect(() => {
         fetchRecentRequests();
-         fetchRecentRequest();
+        fetchRecentRequest();
     }, []);
-const fetchRecentRequests = async () => {
-    setLoading(true);
-    try {
-        const res = await axiosSecure.get("/my-requests-summary");
-        setRecentRequests(res.data.recentRequests || []);
-        setStats(res.data.stats || {});
-    } catch (err) {
-        console.error("Fetch error:", err);
-    } finally {
-        setLoading(false);
-    }
-};
+
+    const fetchRecentRequests = async () => {
+        setLoading(true);
+        try {
+            const res = await axiosSecure.get("/my-requests-summary");
+            setRecentRequests(res.data.recentRequests || []);
+            setStats(res.data.stats || {});
+        } catch (err) {
+            console.error("Fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fetchRecentRequest = async () => {
         setLoading(true);
         try {
             const res = await axiosSecure.get("/admin-requests");
             const requests = res.data.requests || [];
-
             setRecentRequests(requests);
 
             const computed = {
@@ -79,60 +88,11 @@ const fetchRecentRequests = async () => {
         }
     };
 
-// if (isRole === "volunteer" || isRole === "donor") {
-//     const fetchRecentRequests = async () => {
-//         setLoading(true);
-//         try {
-//             const res = await axiosSecure.get("/my-requests-summary");
-//             setRecentRequests(res.data.recentRequests || []);
-//             setStats(res.data.stats || {});
-//         } catch (err) {
-//             console.error("Fetch error:", err);
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     fetchRecentRequests(); // call the function
-// }
-
-console.log(recentRequests);
-
-
-    // const fetchRecentRequests = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const res = await axiosSecure.get("/my-requests?size=3&page=0");
-    //         const requests = res.data.requests || [];
-
-    //         setRecentRequests(requests);
-
-    //         const computed = {
-    //             total: requests.length,
-    //             pending: 0,
-    //             inprogress: 0,
-    //             done: 0,
-    //             canceled: 0,
-    //         };
-
-    //         requests.forEach((r) => {
-    //             if (r.donation_status) computed[r.donation_status]++;
-    //         });
-
-    //         setStats(computed);
-    //     } catch (err) {
-    //         console.error("Fetch error:", err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
     const handleStatusUpdate = async (id, status) => {
         try {
             await axiosSecure.patch(`/donation-request/${id}`, {
                 donation_status: status,
             });
-
             Swal.fire({
                 icon: "success",
                 title: "Updated",
@@ -140,7 +100,6 @@ console.log(recentRequests);
                 timer: 1500,
                 showConfirmButton: false,
             });
-
             fetchRecentRequests();
         } catch (err) {
             Swal.fire("Error", "Failed to update status", "error");
@@ -185,7 +144,6 @@ console.log(recentRequests);
         <div className="min-h-screen bg-gradient-to-br from-red-50 to-white p-6">
             <div className="max-w-7xl mx-auto space-y-8">
 
-                {/* Welcome Banner */}
                 <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -196,7 +154,7 @@ console.log(recentRequests);
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">
-                            Welcome back, {user?.displayName || "Donor"} 👋
+                            Welcome back, {mongoUser?.name || user?.displayName || "Donor"} 👋
                         </h1>
                         <p className="text-gray-600 mt-1">
                             Quick overview of your donation activity
@@ -204,7 +162,6 @@ console.log(recentRequests);
                     </div>
                 </motion.div>
 
-                {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     {Object.keys(stats).map((key) => (
                         <motion.div
@@ -224,83 +181,79 @@ console.log(recentRequests);
                     ))}
                 </div>
 
-                {/* Recent Requests Table */}
                 {
-                    isRole==="admin" || isRole==="volunteer" &&(      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <div className="bg-red-600 px-6 py-4 text-white font-bold text-lg">
-                        Recent Donation Requests
-                    </div>
+                    (isRole === "admin" || isRole === "volunteer" || isRole === "donor") && (
+                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                            <div className="bg-red-600 px-6 py-4 text-white font-bold text-lg">
+                                Recent Donation Requests
+                            </div>
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-                                <tr>
-                                    {["Recipient", "Location", "Date", "Blood", "Status", "Actions"].map((h) => (
-                                        <th key={h} className="px-6 py-3 text-left">{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+                                        <tr>
+                                            {["Recipient", "Location", "Date", "Blood", "Status", "Actions"].map((h) => (
+                                                <th key={h} className="px-6 py-3 text-left">{h}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
 
-                            <tbody className="divide-y">
-                                {loading ? (
-                                    [...Array(3)].map((_, i) => (
-                                        <tr key={i}>
-                                            <td colSpan="6" className="px-6 py-4">
-                                                <Skeleton height={40} />
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : recentRequests.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="6" className="text-center py-6 text-gray-500">
-                                            No requests found
-                                        </td>
-                                    </tr>
-                                ) : ( 
-                                    recentRequests.map((r) => (
-                                        <tr key={r._id} className="hover:bg-gray-50 transition-colors">
-                                            <td className="px-6 py-4">{r.recipientName}</td>
-                                            <td className="px-6 py-4">{r.upazila}, {r.district}</td>
-                                            <td className="px-6 py-4">{r.donationDate}</td>
-                                            <td className="px-6 py-4 font-bold text-red-600">{r.bloodGroup}</td>
-                                            <td className="px-6 py-4">{badge(r.donation_status)}</td>
-                                            <td className="px-6 py-4 flex gap-2">
-                                                <button
-                                                    onClick={() => handleStatusUpdate(r._id, "done")}
-                                                    className="p-2 text-green-600 hover:bg-green-50 rounded transition"
-                                                >
-                                                    <FaCheckCircle />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleStatusUpdate(r._id, "canceled")}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                                >
-                                                    <FaTimesCircle />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(r._id)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                                >
-                                                    <FaTrash />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>)
-              
+                                    <tbody className="divide-y">
+                                        {loading ? (
+                                            [...Array(3)].map((_, i) => (
+                                                <tr key={i}>
+                                                    <td colSpan="6" className="px-6 py-4">
+                                                        <Skeleton height={40} />
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : recentRequests.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="6" className="text-center py-6 text-gray-500">
+                                                    No requests found
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            // Slice the array to only show the first 3
+                                            recentRequests.slice(0, 3).map((r) => (
+                                                <tr key={r._id} className="hover:bg-gray-50 transition-colors">
+                                                    <td className="px-6 py-4">{r.recipientName}</td>
+                                                    <td className="px-6 py-4">{r.upazila}, {r.district}</td>
+                                                    <td className="px-6 py-4">{r.donationDate}</td>
+                                                    <td className="px-6 py-4 font-bold text-red-600">{r.bloodGroup}</td>
+                                                    <td className="px-6 py-4">{badge(r.donation_status)}</td>
+                                                    <td className="px-6 py-4 flex gap-2">
+                                                        <button
+                                                            onClick={() => handleStatusUpdate(r._id, "done")}
+                                                            className="p-2 text-green-600 hover:bg-green-50 rounded transition"
+                                                        >
+                                                            <FaCheckCircle />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleStatusUpdate(r._id, "canceled")}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                                        >
+                                                            <FaTimesCircle />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(r._id)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>)
+
                 }
 
-              {
-                isRole==="admin" && <AdminDonationStats></AdminDonationStats>
-              }
-             {
-                isRole==="admin" && <AdminDonationList></AdminDonationList>
-             }
-                {/* <AdminDonationRequestOverview></AdminDonationRequestOverview> */}
+                {isRole === "admin" && <AdminDonationStats />}
+               
             </div>
         </div>
     );

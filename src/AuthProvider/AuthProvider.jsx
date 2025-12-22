@@ -5,8 +5,8 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     signOut,
-    onAuthStateChanged, // <<< 🌟 CRUCIAL IMPORT 
-    signInWithEmailAndPassword // <<< Added for Login functionality
+    onAuthStateChanged, 
+    signInWithEmailAndPassword 
 } from "firebase/auth";
 import axios from 'axios';
 
@@ -56,7 +56,7 @@ const AuthProvider = ({ children }) => {
     // }
     useEffect(() => {
         if (!user) return;
-        axios.get(`http://localhost:3000/users/role/${user.email}`)
+        axios.get(`https://blood-donation-server-coral.vercel.app/users/role/${user.email}`)
             .then(res => {
                 console.log(res.data.role);
 

@@ -6,13 +6,13 @@ import Register from "../Pages/Register/Register";
 
 import DashboardLayouts from "../DashboardLayouts/DashboardLayouts";
 
-import ManageDashboard from "../Dashboard/ManageDashboard/ManageDashboard";
+// import ManageDashboard from "../Dashboard/ManageDashboard/ManageDashboard";
 import CreateDonationRequest from "../Dashboard/AddRequest/CreateDonationRequest";
 import AllUsers from "../Dashboard/AllUsers/AllUsers";
 import MyDonationRequests from "../Dashboard/MyDonationRequest/MyDonationRequests";
 import DashboardHome from "../Dashboard/DashboardHome";
 import DashboardProfile from "../Dashboard/DashboardProfile";
- import EditDonationRequest from "../Dashboard/EditDonationRequest";
+// import EditDonationRequest from "../Dashboard/EditDonationRequest";
 
 import PrivateRoutes from "../Private/PrivateRoutes";
 import AdminRoute from "../Private/AdminRoute";
@@ -25,96 +25,89 @@ import SearchRequest from "../Pages/SearchRequest/SearchRequest";
 import AllUserRequests from "../Dashboard/Admin/AllUserRequests";
 import AdminDonationStats from "../Dashboard/Admin/AdminDonationStats";
 import AdminDonationRequestsPage from "../Dashboard/Admin/AdminDonationRequestsPage";
-import AdminDonationRequests from "../Dashboard/Admin/AdminDonationRequests";
+//import AdminDonationRequests from "../Dashboard/Admin/AdminDonationRequests";
 import ErrorPage from "../Pages/Error/ErrorPage";
-import UpdateDonationRequest from "../Dashboard/Update/UpdateDonationRequest";
+import AdminOrVolunteerRoute from "../Private/AdminOrVolunteerRoute";
+//import UpdateDonationRequest from "../Dashboard/Update/UpdateDonationRequest";
+// import VolunteerRequests from "../Dashboard/Admin/VolunteerRequests";
 //import EditDonationRequest from "../Dashboard/Update/EditDonationRequest";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <RootLayout />,
-        errorElement:<ErrorPage></ErrorPage>,
-        children: [
-            { index: true, element: <Home /> },
-            { path: "/login", element: <Login /> },
-            { path: "/register", element: <Register /> },
-            { path: "/donate", element: <Donate /> },
-            { path: "/payment-success", element: <PaymentSuccess /> },
-            { path: "/search-request", element: <SearchRequest /> },
-            {
-                path: 'donation-requests',
-                element: (
-                    <PrivateRoutes>
-                        <AdminDonationRequestsPage></AdminDonationRequestsPage>
-                    </PrivateRoutes>
-                )
-            }
-        ],
-    },
-
-    {
-        path: "/dashboard",
+  {
+    path: "/",
+    element: <RootLayout />,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
+      { path: "/donate", element: <Donate /> },
+      { path: "/payment-success", element: <PaymentSuccess /> },
+      { path: "/search-request", element: <SearchRequest /> },
+      {
+        path: "donation-requests",
         element: (
-            <PrivateRoutes>
-                <DashboardLayouts />
-            </PrivateRoutes>
+          <PrivateRoutes>
+            <AdminDonationRequestsPage></AdminDonationRequestsPage>
+          </PrivateRoutes>
         ),
-        errorElement: <ErrorPage></ErrorPage>,
-        children: [
-            // ✅ Everyone
-            { index: true, element: <DashboardHome /> },
+      },
+    ],
+  },
 
-            { path: "profile", element: <DashboardProfile /> },           
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoutes>
+        <DashboardLayouts />
+      </PrivateRoutes>
+    ),
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+     
+      { index: true, element: <DashboardHome /> },
 
-            {
-                path: "add-request",
-                element: (
-                    
-                        <CreateDonationRequest />
-                    
-                ),
-            },
-            
-              {
-                path: "my-requests",
-                element: (
-                    <DonorRoute>
-                        <MyDonationRequests />
-                    </DonorRoute>
-                ),
-            },
+      { path: "profile", element: <DashboardProfile /> },
 
-            // 🌐 Admin only
-            {
-                path: "all-user",
-                element: (
-                    <AdminRoute>
-                        <AllUsers />
-                    </AdminRoute>
-                ),
-            },
-            {
-                path: "all-requests",
-                element: (
-                    <AdminRoute>
-                        <AllUserRequests />
-                    </AdminRoute>
-                ),
-            },
-            {
-                path: 'all-donation',
-                element: (
-                    <AdminRoute>
-                        <AdminDonationStats></AdminDonationStats>
-                    </AdminRoute>
-                )
-            },
-          
-           
+      {
+        path: "add-request",
+        element: <CreateDonationRequest />,
+      },
 
-        ],
-    },
+      {
+        path: "my-requests",
+        element:<MyDonationRequests />
+
+      },
+      {
+        path: "all-requests",
+        element: (
+          <VolunteerRoute>
+            <AllUserRequests />
+          </VolunteerRoute>
+        ),
+      },
+
+      
+      {
+        path: "all-user",
+        element: (
+          <AdminOrVolunteerRoute>
+             <AllUsers />
+          </AdminOrVolunteerRoute>
+        ),
+      },
+
+      {
+        path: "all-donation",
+        element: (
+          <AdminRoute>
+            <AdminDonationStats></AdminDonationStats>
+          </AdminRoute>
+        ),
+      },
+    ],
+  },
 ]);
 
 export default router;

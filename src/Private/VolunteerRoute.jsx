@@ -1,20 +1,26 @@
-import { useContext } from "react";
-import { Navigate } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import useAxiosSecure from "../Hooks/UseAxiosSecure";
 import Loading from "./Loading";
 
 const VolunteerRoute = ({ children }) => {
-    const { role, loading, roleloading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
+  const axiosSecure = useAxiosSecure();
+  const [role, setRole] = useState(null);
 
-    if (loading || roleloading) {
-        return <Loading></Loading>
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure.get(`/users/role/${user.email}`)
+        .then(res => setRole(res.data.role));
     }
+  }, [user, axiosSecure]);
 
-    if (role !== "volunteer" && role !== "admin") {
-        return <Navigate to="/dashboard" />;
-    }
+  if (loading || !role) return <Loading></Loading>;
 
+  if (role === "admin" || role === "volunteer") {
     return children;
-};
+  }
 
+  return <Navigate to="/dashboard" replace />;
+};
 export default VolunteerRoute;
