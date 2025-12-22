@@ -60,13 +60,14 @@ const AuthProvider = ({ children }) => {
             .then(res => {
                 console.log(res.data.role);
 
-                 setRole(res.data.role)
+                setRole(res.data.role)
                 setLoading(false)
                 setroleLoading(false)
             })
         
     },[user])
     console.log(role)  
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser); // Update user state (null on logout, user object on login)

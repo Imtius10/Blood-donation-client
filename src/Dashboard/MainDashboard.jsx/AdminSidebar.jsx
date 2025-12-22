@@ -74,10 +74,7 @@ export default function DashboardSidebar() {
               {!collapsed && "User Management"}
             </NavLink>
 
-            <NavLink to="/dashboard/add-request" className={linkStyle}>
-              <Droplet size={20} />
-              {!collapsed && "Create Blood Request"}
-            </NavLink>
+         
 
             <NavLink to="/dashboard/all-requests" className={linkStyle}>
               <BarChart3 size={20} />
@@ -93,15 +90,17 @@ export default function DashboardSidebar() {
         {/* ================= VOLUNTEER ================= */}
         {role === "volunteer" && (
           <>
-            <NavLink to="/dashboard/add-request" className={linkStyle}>
-              <Droplet size={20} />
-              {!collapsed && "Create Blood Request"}
-            </NavLink>
+         
 
             <NavLink to="/dashboard/my-requests" className={linkStyle}>
               <ClipboardList size={20} />
               {!collapsed && "Manage Requests"}
             </NavLink>
+               <NavLink to="/dashboard/all-requests" className={linkStyle}>
+              <BarChart3 size={20} />
+              {!collapsed && "All Users"}
+            </NavLink>
+          
           </>
         )}
 

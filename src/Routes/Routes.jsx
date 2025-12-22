@@ -65,13 +65,7 @@ const router = createBrowserRouter([
             // ✅ Everyone
             { index: true, element: <DashboardHome /> },
 
-            { path: "profile", element: <DashboardProfile /> },
-
-           {
-      path: "edit-request/:id", 
-      element: <UpdateDonationRequest />
-    },
-           
+            { path: "profile", element: <DashboardProfile /> },           
 
             {
                 path: "add-request",
@@ -100,15 +94,6 @@ const router = createBrowserRouter([
                     </AdminRoute>
                 ),
             },
-
-            {
-                path: "manageproduct",
-                element: (
-                    <AdminRoute>
-                        <ManageDashboard />
-                    </AdminRoute>
-                ),
-            },
             {
                 path: "all-requests",
                 element: (
@@ -125,6 +110,7 @@ const router = createBrowserRouter([
                     </AdminRoute>
                 )
             },
+          
            
 
         ],

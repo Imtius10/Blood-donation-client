@@ -12,13 +12,21 @@ import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import AdminDonationStats from "./Admin/AdminDonationStats";
+import AdminDonationRequests from "./Admin/AdminDonationRequests";
+import AdminDonationRequestOverview from "./Admin/AdminDonationRequestsPreview";
+import AdminDonationList from "./Admin/AdminDonationList";
 
 const DashboardHome = () => {
-    const { user } = useContext(AuthContext);
+    const { user,role } = useContext(AuthContext);
+    const isRole=role;
+//console.log(admin);
+    
+    
     const axiosSecure = useAxiosSecure();
 
     const [recentRequests, setRecentRequests] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const [stats, setStats] = useState({
         total: 0,
         pending: 0,
@@ -29,12 +37,24 @@ const DashboardHome = () => {
 
     useEffect(() => {
         fetchRecentRequests();
+         fetchRecentRequest();
     }, []);
-
-    const fetchRecentRequests = async () => {
+const fetchRecentRequests = async () => {
+    setLoading(true);
+    try {
+        const res = await axiosSecure.get("/my-requests-summary");
+        setRecentRequests(res.data.recentRequests || []);
+        setStats(res.data.stats || {});
+    } catch (err) {
+        console.error("Fetch error:", err);
+    } finally {
+        setLoading(false);
+    }
+};
+    const fetchRecentRequest = async () => {
         setLoading(true);
         try {
-            const res = await axiosSecure.get("/my-requests?size=3&page=0");
+            const res = await axiosSecure.get("/admin-requests");
             const requests = res.data.requests || [];
 
             setRecentRequests(requests);
@@ -58,6 +78,54 @@ const DashboardHome = () => {
             setLoading(false);
         }
     };
+
+// if (isRole === "volunteer" || isRole === "donor") {
+//     const fetchRecentRequests = async () => {
+//         setLoading(true);
+//         try {
+//             const res = await axiosSecure.get("/my-requests-summary");
+//             setRecentRequests(res.data.recentRequests || []);
+//             setStats(res.data.stats || {});
+//         } catch (err) {
+//             console.error("Fetch error:", err);
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+
+//     fetchRecentRequests(); // call the function
+// }
+
+console.log(recentRequests);
+
+
+    // const fetchRecentRequests = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const res = await axiosSecure.get("/my-requests?size=3&page=0");
+    //         const requests = res.data.requests || [];
+
+    //         setRecentRequests(requests);
+
+    //         const computed = {
+    //             total: requests.length,
+    //             pending: 0,
+    //             inprogress: 0,
+    //             done: 0,
+    //             canceled: 0,
+    //         };
+
+    //         requests.forEach((r) => {
+    //             if (r.donation_status) computed[r.donation_status]++;
+    //         });
+
+    //         setStats(computed);
+    //     } catch (err) {
+    //         console.error("Fetch error:", err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const handleStatusUpdate = async (id, status) => {
         try {
@@ -157,7 +225,8 @@ const DashboardHome = () => {
                 </div>
 
                 {/* Recent Requests Table */}
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                {
+                    isRole==="admin" || isRole==="volunteer" &&(      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <div className="bg-red-600 px-6 py-4 text-white font-bold text-lg">
                         Recent Donation Requests
                     </div>
@@ -187,7 +256,7 @@ const DashboardHome = () => {
                                             No requests found
                                         </td>
                                     </tr>
-                                ) : (
+                                ) : ( 
                                     recentRequests.map((r) => (
                                         <tr key={r._id} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4">{r.recipientName}</td>
@@ -196,28 +265,24 @@ const DashboardHome = () => {
                                             <td className="px-6 py-4 font-bold text-red-600">{r.bloodGroup}</td>
                                             <td className="px-6 py-4">{badge(r.donation_status)}</td>
                                             <td className="px-6 py-4 flex gap-2">
-                                                {(user?.role === "admin" || user?.role === "volunteer") && (
-                                                    <>
-                                                        <button
-                                                            onClick={() => handleStatusUpdate(r._id, "done")}
-                                                            className="p-2 text-green-600 hover:bg-green-50 rounded transition"
-                                                        >
-                                                            <FaCheckCircle />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleStatusUpdate(r._id, "canceled")}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                                        >
-                                                            <FaTimesCircle />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDelete(r._id)}
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                                        >
-                                                            <FaTrash />
-                                                        </button>
-                                                    </>
-                                                )}
+                                                <button
+                                                    onClick={() => handleStatusUpdate(r._id, "done")}
+                                                    className="p-2 text-green-600 hover:bg-green-50 rounded transition"
+                                                >
+                                                    <FaCheckCircle />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleStatusUpdate(r._id, "canceled")}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                                >
+                                                    <FaTimesCircle />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(r._id)}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                                >
+                                                    <FaTrash />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))
@@ -225,10 +290,17 @@ const DashboardHome = () => {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div>)
+              
+                }
 
-                {/* Admin Donation Stats */}
-                <AdminDonationStats />
+              {
+                isRole==="admin" && <AdminDonationStats></AdminDonationStats>
+              }
+             {
+                isRole==="admin" &&  <AdminDonationList></AdminDonationList>
+             }
+                {/* <AdminDonationRequestOverview></AdminDonationRequestOverview> */}
             </div>
         </div>
     );

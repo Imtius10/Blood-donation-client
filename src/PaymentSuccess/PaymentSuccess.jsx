@@ -1,38 +1,24 @@
-import React, { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router";
-import useAxios from "../Hooks/UseAxios";
-import { FaCheckCircle } from "react-icons/fa";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router";
+import useAxiosSecure from "../Hooks/UseAxiosSecure";
 
 const PaymentSuccess = () => {
-    const [searchParams] = useSearchParams();
-    const sessionId = searchParams.get("session_id");
-    const axiosInstance = useAxios();
-    const navigate = useNavigate();
+    const [params] = useSearchParams();
+    const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
-        if (sessionId) {
-            axiosInstance
-                .post(`/success-payment?session_id=${sessionId}`)
-                .catch((err) => console.error("Payment success logging error:", err));
+        const session_id = params.get("session_id");
+
+        if (session_id) {
+            axiosSecure.post(`/success-payment?session_id=${session_id}`);
         }
-    }, [axiosInstance, sessionId]);
+    }, [params, axiosSecure]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white px-4">
-            <div className="bg-white shadow-2xl rounded-3xl p-10 max-w-md w-full text-center animate-fadeIn">
-                <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-6 animate-pulse" />
-                <h1 className="text-3xl font-bold text-gray-800 mb-4">Payment Successful!</h1>
-                <p className="text-gray-600 mb-6">
-                    Thank you for your donation. Your transaction has been completed successfully.
-                </p>
-
-                <button
-                    onClick={() => navigate("/")}
-                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-semibold transition-all"
-                >
-                    Go to Home
-                </button>
-            </div>
+        <div className="min-h-screen flex items-center justify-center">
+            <h2 className="text-3xl font-bold text-green-600">
+                ✅ Payment Successful!
+            </h2>
         </div>
     );
 };
