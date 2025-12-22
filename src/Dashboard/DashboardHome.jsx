@@ -12,8 +12,6 @@ import { motion } from "framer-motion";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import AdminDonationStats from "./Admin/AdminDonationStats";
-import AdminDonationRequests from "./Admin/AdminDonationRequests";
-import AdminDonationRequestOverview from "./Admin/AdminDonationRequestsPreview";
 
 const DashboardHome = () => {
     const { user } = useContext(AuthContext);
@@ -21,7 +19,6 @@ const DashboardHome = () => {
 
     const [recentRequests, setRecentRequests] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [stats, setStats] = useState({
         total: 0,
         pending: 0,
@@ -199,24 +196,28 @@ const DashboardHome = () => {
                                             <td className="px-6 py-4 font-bold text-red-600">{r.bloodGroup}</td>
                                             <td className="px-6 py-4">{badge(r.donation_status)}</td>
                                             <td className="px-6 py-4 flex gap-2">
-                                                <button
-                                                    onClick={() => handleStatusUpdate(r._id, "done")}
-                                                    className="p-2 text-green-600 hover:bg-green-50 rounded transition"
-                                                >
-                                                    <FaCheckCircle />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleStatusUpdate(r._id, "canceled")}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                                >
-                                                    <FaTimesCircle />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(r._id)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                                                >
-                                                    <FaTrash />
-                                                </button>
+                                                {(user?.role === "admin" || user?.role === "volunteer") && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleStatusUpdate(r._id, "done")}
+                                                            className="p-2 text-green-600 hover:bg-green-50 rounded transition"
+                                                        >
+                                                            <FaCheckCircle />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleStatusUpdate(r._id, "canceled")}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                                        >
+                                                            <FaTimesCircle />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(r._id)}
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded transition"
+                                                        >
+                                                            <FaTrash />
+                                                        </button>
+                                                    </>
+                                                )}
                                             </td>
                                         </tr>
                                     ))
@@ -228,7 +229,6 @@ const DashboardHome = () => {
 
                 {/* Admin Donation Stats */}
                 <AdminDonationStats />
-                {/* <AdminDonationRequestOverview></AdminDonationRequestOverview> */}
             </div>
         </div>
     );

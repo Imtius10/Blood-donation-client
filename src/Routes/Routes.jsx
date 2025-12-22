@@ -12,7 +12,7 @@ import AllUsers from "../Dashboard/AllUsers/AllUsers";
 import MyDonationRequests from "../Dashboard/MyDonationRequest/MyDonationRequests";
 import DashboardHome from "../Dashboard/DashboardHome";
 import DashboardProfile from "../Dashboard/DashboardProfile";
-import EditDonationRequest from "../Dashboard/EditDonationRequest";
+ import EditDonationRequest from "../Dashboard/EditDonationRequest";
 
 import PrivateRoutes from "../Private/PrivateRoutes";
 import AdminRoute from "../Private/AdminRoute";
@@ -27,6 +27,8 @@ import AdminDonationStats from "../Dashboard/Admin/AdminDonationStats";
 import AdminDonationRequestsPage from "../Dashboard/Admin/AdminDonationRequestsPage";
 import AdminDonationRequests from "../Dashboard/Admin/AdminDonationRequests";
 import ErrorPage from "../Pages/Error/ErrorPage";
+import UpdateDonationRequest from "../Dashboard/Update/UpdateDonationRequest";
+//import EditDonationRequest from "../Dashboard/Update/EditDonationRequest";
 
 const router = createBrowserRouter([
     {
@@ -65,32 +67,27 @@ const router = createBrowserRouter([
 
             { path: "profile", element: <DashboardProfile /> },
 
+           {
+      path: "edit-request/:id", 
+      element: <UpdateDonationRequest />
+    },
            
+
             {
+                path: "add-request",
+                element: (
+                    
+                        <CreateDonationRequest />
+                    
+                ),
+            },
+            
+              {
                 path: "my-requests",
                 element: (
                     <DonorRoute>
                         <MyDonationRequests />
                     </DonorRoute>
-                ),
-            },
-
-            // 🤝 Volunteer + Admin
-            {
-                path: "add-request",
-                element: (
-                    <VolunteerRoute>
-                        <CreateDonationRequest />
-                    </VolunteerRoute>
-                ),
-            },
-
-            {
-                path: "edit-request/:id",
-                element: (
-                    <VolunteerRoute>
-                        <EditDonationRequest />
-                    </VolunteerRoute>
                 ),
             },
 
