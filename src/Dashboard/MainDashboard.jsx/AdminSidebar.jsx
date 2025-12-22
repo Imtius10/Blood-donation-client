@@ -11,6 +11,7 @@ import {
     ChevronRight,
     LogOut,
     User,
+    Home,
 } from "lucide-react";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 
@@ -117,26 +118,32 @@ export default function DashboardSidebar() {
             </nav>
 
             {/* Logout */}
-            <div className="p-3 border-t border-slate-700 flex">
-                <button
-                    onClick={logoutUser}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
-                    text-red-400 hover:bg-red-500/10 transition
-                    ${collapsed && "justify-center"}`}
-                >
-                    <LogOut size={20} />
-                    {!collapsed && "Logout"}
-                </button>
-                 <button
-                    
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
-                    text-red-400 hover:bg-red-500/10 transition
-                    ${collapsed && "justify-center"}`}
-                >
-                    <LogOut size={20} />
-                    {!collapsed && "Home"}
-                </button>
-            </div>
+           <div className="p-3 border-t border-slate-700 flex gap-2">
+    {/* Logout */}
+    <button
+        onClick={logoutUser}
+        className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
+        text-red-400 hover:bg-red-500/10 transition
+        ${collapsed && "justify-center"}`}
+    >
+        <LogOut size={20} />
+        {!collapsed && "Logout"}
+    </button>
+
+    {/* Home */}
+<NavLink to={'/'}>
+        <button
+        
+        className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg
+        text-sky-400 hover:bg-sky-500/10 transition
+        ${collapsed && "justify-center"}`}
+    >
+        <Home size={20} />
+        {!collapsed && "Home"}
+    </button>
+</NavLink>
+</div>
+
             
         </aside>
     );
