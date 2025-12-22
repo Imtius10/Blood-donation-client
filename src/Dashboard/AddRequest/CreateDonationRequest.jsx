@@ -9,12 +9,10 @@ import {
     FaMapMarkerAlt,
     FaHospital,
 } from "react-icons/fa";
-import useAxios from "../../Hooks/UseAxios";
 import useAxiosSecure from "../../Hooks/UseAxiosSecure";
 
 const CreateDonationRequest = () => {
     const { user } = useContext(AuthContext);
-    const axiosInstance = useAxios();
     const axiosSecure = useAxiosSecure();
 
     const [districts, setDistricts] = useState([]);
@@ -32,39 +30,42 @@ const CreateDonationRequest = () => {
         message: "",
     });
 
-    // ---------------- FETCH DISTRICT & UPAZILA ----------------
+    /* ---------------- FETCH DATA ---------------- */
     useEffect(() => {
-        axios.get("/district.json")
-            .then(res => setDistricts(res.data.districts))
-            .catch(err => console.log(err));
-
-        axios.get("/upozila.json")
-            .then(res => setUpazilas(res.data.upazilas))
-            .catch(err => console.log(err));
+        axios.get("/district.json").then(res => setDistricts(res.data.districts));
+        axios.get("/upozila.json").then(res => setUpazilas(res.data.upazilas));
     }, []);
 
-    // ---------------- HANDLE CHANGE ----------------
+    /* ---------------- HANDLE CHANGE ---------------- */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // ---------------- HANDLE SUBMIT ----------------
+    /* ---------------- VALIDATION ---------------- */
+    const validateForm = () => {
+        for (const key in formData) {
+            if (!formData[key].trim()) {
+                toast.error("All fields are required");
+                return false;
+            }
+        }
+        if (!user?.email || !user?.displayName) {
+            toast.error("User not authenticated");
+            return false;
+        }
+        return true;
+    };
+
+    /* ---------------- SUBMIT ---------------- */
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
 
         const donationRequest = {
-            requesterName: user?.displayName,
-            requesterEmail: user?.email,
-            recipientName: formData.recipientName,
-            district: formData.district,
-            upazila: formData.upazila,
-            hospitalName: formData.hospitalName,
-            address: formData.address,
-            bloodGroup: formData.bloodGroup,
-            donationDate: formData.donationDate,
-            donationTime: formData.donationTime,
-            message: formData.message,
+            requesterName: user.displayName,
+            requesterEmail: user.email,
+            ...formData,
             donation_status: "pending",
             createdAt: new Date(),
         };
@@ -73,7 +74,6 @@ const CreateDonationRequest = () => {
             await axiosSecure.post("/donation-request", donationRequest);
             toast.success("Donation request created successfully!");
 
-            // Reset form
             setFormData({
                 recipientName: "",
                 district: "",
@@ -86,54 +86,50 @@ const CreateDonationRequest = () => {
                 message: "",
             });
         } catch (err) {
-            console.error(err);
             toast.error("Failed to create donation request");
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white px-4 py-10">
+        <div className="min-h-screen flex items-center justify-center bg-red-50 px-4 py-10">
             <Toaster position="top-right" />
 
-            <div className="w-full max-w-xl bg-white shadow-2xl rounded-3xl p-8 border-t-8 border-red-500">
+            <div className="w-full max-w-xl bg-white shadow-xl rounded-3xl p-8 border-t-8 border-red-500">
                 <h1 className="text-3xl font-bold text-center mb-8 text-red-600">
                     Create Donation Request
                 </h1>
 
                 <form onSubmit={handleSubmit} className="space-y-4 text-black">
-                    {/* Requester Name */}
+
+                    {/* Name */}
                     <div className="relative">
                         <FaUser className="absolute top-3 left-3 text-red-500" />
                         <input
-                            type="text"
                             value={user?.displayName || ""}
                             readOnly
-                            className="w-full pl-10 border border-red-300 rounded-xl p-3 bg-red-50"
+                            className="w-full pl-10 border rounded-xl p-3 bg-gray-100"
                         />
                     </div>
 
-                    {/* Requester Email */}
+                    {/* Email */}
                     <div className="relative">
                         <FaEnvelope className="absolute top-3 left-3 text-red-500" />
                         <input
-                            type="email"
                             value={user?.email || ""}
                             readOnly
-                            className="w-full pl-10 border border-red-300 rounded-xl p-3 bg-red-50"
+                            className="w-full pl-10 border rounded-xl p-3 bg-gray-100"
                         />
                     </div>
 
-                    {/* Recipient Name */}
+                    {/* Recipient */}
                     <div className="relative">
                         <FaHospitalUser className="absolute top-3 left-3 text-red-500" />
                         <input
-                            type="text"
                             name="recipientName"
-                            placeholder="Recipient Name"
                             value={formData.recipientName}
                             onChange={handleChange}
-                            required
-                            className="w-full pl-10 border border-red-300 rounded-xl p-3"
+                            placeholder="Recipient Name"
+                            className="w-full pl-10 border rounded-xl p-3"
                         />
                     </div>
 
@@ -143,8 +139,7 @@ const CreateDonationRequest = () => {
                             name="district"
                             value={formData.district}
                             onChange={handleChange}
-                            required
-                            className="flex-1 border border-red-300 rounded-xl p-3"
+                            className="flex-1 border rounded-xl p-3"
                         >
                             <option value="">Select District</option>
                             {districts.map(d => (
@@ -156,8 +151,7 @@ const CreateDonationRequest = () => {
                             name="upazila"
                             value={formData.upazila}
                             onChange={handleChange}
-                            required
-                            className="flex-1 border border-red-300 rounded-xl p-3"
+                            className="flex-1 border rounded-xl p-3"
                         >
                             <option value="">Select Upazila</option>
                             {upazilas.map(u => (
@@ -166,17 +160,15 @@ const CreateDonationRequest = () => {
                         </select>
                     </div>
 
-                    {/* Hospital Name */}
+                    {/* Hospital */}
                     <div className="relative">
                         <FaHospital className="absolute top-3 left-3 text-red-500" />
                         <input
-                            type="text"
                             name="hospitalName"
-                            placeholder="Hospital Name"
                             value={formData.hospitalName}
                             onChange={handleChange}
-                            required
-                            className="w-full pl-10 border border-red-300 rounded-xl p-3"
+                            placeholder="Hospital Name"
+                            className="w-full pl-10 border rounded-xl p-3"
                         />
                     </div>
 
@@ -184,33 +176,25 @@ const CreateDonationRequest = () => {
                     <div className="relative">
                         <FaMapMarkerAlt className="absolute top-3 left-3 text-red-500" />
                         <input
-                            type="text"
                             name="address"
-                            placeholder="Full Address"
                             value={formData.address}
                             onChange={handleChange}
-                            required
-                            className="w-full pl-10 border border-red-300 rounded-xl p-3"
+                            placeholder="Full Address"
+                            className="w-full pl-10 border rounded-xl p-3"
                         />
                     </div>
 
-                    {/* Blood Group */}
+                    {/* Blood */}
                     <select
                         name="bloodGroup"
                         value={formData.bloodGroup}
                         onChange={handleChange}
-                        required
-                        className="w-full border border-red-300 rounded-xl p-3"
+                        className="w-full border rounded-xl p-3"
                     >
                         <option value="">Select Blood Group</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
+                        {["A+","A-","B+","B-","AB+","AB-","O+","O-"].map(bg => (
+                            <option key={bg} value={bg}>{bg}</option>
+                        ))}
                     </select>
 
                     {/* Date & Time */}
@@ -220,34 +204,30 @@ const CreateDonationRequest = () => {
                             name="donationDate"
                             value={formData.donationDate}
                             onChange={handleChange}
-                            required
-                            className="flex-1 border border-red-300 rounded-xl p-3"
+                            className="flex-1 border rounded-xl p-3"
                         />
                         <input
                             type="time"
                             name="donationTime"
                             value={formData.donationTime}
                             onChange={handleChange}
-                            required
-                            className="flex-1 border border-red-300 rounded-xl p-3"
+                            className="flex-1 border rounded-xl p-3"
                         />
                     </div>
 
                     {/* Message */}
                     <textarea
                         name="message"
-                        placeholder="Why you need blood..."
+                        rows={4}
                         value={formData.message}
                         onChange={handleChange}
-                        required
-                        rows={4}
-                        className="w-full border border-red-300 rounded-xl p-3"
+                        placeholder="Why you need blood..."
+                        className="w-full border rounded-xl p-3"
                     />
 
-                    {/* Submit */}
                     <button
                         type="submit"
-                        className="w-full bg-red-500 text-white py-3 rounded-2xl font-semibold hover:bg-red-600 transition shadow-lg"
+                        className="w-full bg-red-500 text-white py-3 rounded-2xl font-semibold hover:bg-red-600"
                     >
                         Request Blood
                     </button>
