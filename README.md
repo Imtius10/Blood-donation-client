@@ -1,16 +1,71 @@
-# React + Vite
+# 🩸 BloodDonate Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the client-side application for the **BloodDonate** platform.  
+It provides a smooth, responsive, and animated user experience for donors, recipients, and administrators.
 
-Currently, two official plugins are available:
+The frontend communicates with the BloodDonate backend API to manage authentication, blood donation requests, donor search, and admin operations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🌟 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔐 **Firebase Authentication**
+  - Secure login & registration
+  - Protected routes for Donor & Admin roles
 
-## Expanding the ESLint configuration
+- 🩸 **Blood Donation Requests**
+  - Create, update, and delete donation requests
+  - View personal donation history
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔍 **Advanced Donor Search**
+  - Filter donors by blood group, district, and upazila
+  - Real-time search results
+
+- 🎨 **Smooth UI & Animations**
+  - Page transitions and micro-interactions using **Framer Motion**
+  - Interactive sliders and banners using **Swiper.js**
+
+- 📱 **Fully Responsive Design**
+  - Optimized for mobile, tablet, and desktop devices
+
+- 🛡️ **Role-Based Dashboard**
+  - Donor dashboard
+  - Admin dashboard with user & request management
+
+---
+
+## 🛠️ Tech Stack
+
+### ⚛️ Frontend
+- **React.js**
+- **React Router**
+- **Framer Motion** (Animations)
+- **Swiper.js** (Sliders & Carousels)
+- **Tailwind CSS**
+
+### 🔥 Authentication
+- **Firebase Authentication**
+
+### 🌐 Data Handling
+- **Axios** for API requests
+- **MongoDB** (via backend API)
+
+---
+
+## 📋 Prerequisites
+
+Before running this project, make sure you have:
+
+1. **Node.js** installed
+2. A **Firebase Project** (Web App)
+3. Backend server running (`BloodDonate Backend`)
+4. Firebase configuration keys
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the repository
+```bash
+git clone <frontend-repository-url>
+cd blood-donate-frontend
