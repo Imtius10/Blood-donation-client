@@ -1,71 +1,68 @@
-# 🩸 BloodDonate Frontend
+# 🩸 BloodDonate – Frontend
 
-This is the client-side application for the **BloodDonate** platform.  
-It provides a smooth, responsive, and animated user experience for donors, recipients, and administrators.
-
-The frontend communicates with the BloodDonate backend API to manage authentication, blood donation requests, donor search, and admin operations.
+BloodDonate is a modern web application that connects blood donors with recipients through a clean, responsive, and user-friendly interface.  
+The platform focuses on accessibility, performance, and smooth user experience to support life-saving blood donation activities.
 
 ---
 
-## 🌟 Features
+## 🌐 Live Project
 
-- 🔐 **Firebase Authentication**
-  - Secure login & registration
-  - Protected routes for Donor & Admin roles
-
-- 🩸 **Blood Donation Requests**
-  - Create, update, and delete donation requests
-  - View personal donation history
-
-- 🔍 **Advanced Donor Search**
-  - Filter donors by blood group, district, and upazila
-  - Real-time search results
-
-- 🎨 **Smooth UI & Animations**
-  - Page transitions and micro-interactions using **Framer Motion**
-  - Interactive sliders and banners using **Swiper.js**
-
-- 📱 **Fully Responsive Design**
-  - Optimized for mobile, tablet, and desktop devices
-
-- 🛡️ **Role-Based Dashboard**
-  - Donor dashboard
-  - Admin dashboard with user & request management
+- **Live Website:** https://bloodcare-savelife.netlify.app/
+- **Backend Repository:** https://github.com/your-username/blood-donate-backend
 
 ---
 
-## 🛠️ Tech Stack
+## 📸 Screenshot
 
-### ⚛️ Frontend
-- **React.js**
-- **React Router**
-- **Framer Motion** (Animations)
-- **Swiper.js** (Sliders & Carousels)
-- **Tailwind CSS**
-
-### 🔥 Authentication
-- **Firebase Authentication**
-
-### 🌐 Data Handling
-- **Axios** for API requests
-- **MongoDB** (via backend API)
+![BloodDonate Screenshot](./src/assets/blooddonate.png)
 
 ---
 
-## 📋 Prerequisites
+## 🛠️ Technologies Used
 
-Before running this project, make sure you have:
+### Frontend
+- React.js
+- React Router DOM
+- Tailwind CSS
+- Framer Motion
+- Swiper.js
 
-1. **Node.js** installed
-2. A **Firebase Project** (Web App)
-3. Backend server running (`BloodDonate Backend`)
-4. Firebase configuration keys
+### Backend (API)
+- Node.js
+- Express.js
+- MongoDB
+- Firebase Authentication
+- Stripe Payment Gateway
 
 ---
 
-## ⚙️ Installation & Setup
+## ✨ Core Features
 
-### 1️⃣ Clone the repository
+- Secure authentication using Firebase
+- Create, update, and manage blood donation requests
+- Search donors by blood group, district, and upazila
+- Role-based dashboards for donors and admins
+- Smooth UI animations with Framer Motion
+- Responsive design for all devices
+- Stripe integration for donation support
+
+---
+
+## 📦 Dependencies
+
+- react
+- react-router-dom
+- axios
+- firebase
+- framer-motion
+- swiper
+- tailwindcss
+
+---
+
+## ⚙️ How to Run Locally
+
+### 1. Clone the repository
 ```bash
-git clone <frontend-repository-url>
+git clone https://github.com/your-username/blood-donate-frontend.git
 cd blood-donate-frontend
